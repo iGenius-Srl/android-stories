@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app
+package com.igenius.androidstories.exampleapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
