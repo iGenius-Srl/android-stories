@@ -79,7 +79,6 @@ class StoryProcessor : AbstractProcessor() {
     }
 
     fun addToProvider(className: ClassName) {
-        val
     }
 
 
