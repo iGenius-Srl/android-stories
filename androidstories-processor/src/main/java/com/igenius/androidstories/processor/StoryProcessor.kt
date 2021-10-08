@@ -3,7 +3,6 @@ package com.igenius.androidstories.processor
 import com.google.auto.service.AutoService
 import com.igenius.androidstories.annotations.Story
 import com.squareup.kotlinpoet.*
-import com.squareup.kotlinpoet.MemberName.Companion.member
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import java.io.File
 import javax.annotation.processing.*
@@ -34,7 +33,7 @@ class StoryProcessor : AbstractProcessor() {
         }
         if (roundEnvironment?.processingOver() != true)
             generateProvider(generatedSourcesRoot, generatedFragments)
-        
+
         return false
     }
 
@@ -88,9 +87,22 @@ class StoryProcessor : AbstractProcessor() {
     }
 
     private fun generateProvider(generatedSourcesRoot: File, classNames: List<ClassName>) {
-        val providerName = "GeneratedStoriesProvider"
+        var packageName: String? = null
+        classNames.forEach { className ->
+            packageName?.let {
+                packageName = it.commonPrefixWith(className.packageName)
+            } ?: run {
+                packageName = className.packageName
+            }
+        }
+
+        val finalPackageName = checkNotNull(packageName) {
+            "no common package name"
+        }
+
+        val providerName = "AppStoriesProvider"
         val file = FileSpec
-            .builder("com.igenius.androidstories.exampleapp", providerName)
+            .builder(finalPackageName, providerName)
             .addType(
                 TypeSpec.classBuilder(providerName)
                     .addSuperinterface(
