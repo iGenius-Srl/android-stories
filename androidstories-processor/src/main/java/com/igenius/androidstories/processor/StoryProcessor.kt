@@ -22,11 +22,11 @@ class StoryProcessor : AbstractProcessor() {
             File(processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME].orEmpty())
         val elements = roundEnvironment?.getElementsAnnotatedWith(Story::class.java)
 
-        val generatedFragments = mutableListOf<ClassName>()
+        val generatedFragments = mutableListOf<Pair<Element, ClassName>>()
         elements?.filterNotNull()?.forEach { element ->
             if (element.kind == ElementKind.METHOD) {
                 createFragment(element).let {
-                    generatedFragments.add(it.first)
+                    generatedFragments.add(element to it.first)
                     it.second.writeTo(generatedSourcesRoot)
                 }
             }
@@ -86,9 +86,9 @@ class StoryProcessor : AbstractProcessor() {
         return className to file
     }
 
-    private fun generateProvider(generatedSourcesRoot: File, classNames: List<ClassName>) {
+    private fun generateProvider(generatedSourcesRoot: File, classNames: List<Pair<Element, ClassName>>) {
         var packageName: String? = null
-        classNames.forEach { className ->
+        classNames.forEach { (_, className) ->
             packageName?.let {
                 packageName = it.commonPrefixWith(className.packageName)
             } ?: run {
@@ -127,12 +127,7 @@ class StoryProcessor : AbstractProcessor() {
                                 """
                                 listOf(${
                                     classNames.joinToString(",") {
-                                        """
-                            object: FragmentStory {
-                                override val title = "${it.simpleName}"
-                                override val description: String? = null
-                                override fun generateFragment() = ${it.canonicalName}()
-                            }"""
+                                        generateFragmentStory(it.first, it.second)
                                     }
                                 }
                         )
@@ -145,6 +140,19 @@ class StoryProcessor : AbstractProcessor() {
             .build()
 
         file.writeTo(generatedSourcesRoot)
+    }
+
+    private fun generateFragmentStory(element: Element, fragmentName: ClassName): String {
+        val title = element.getAnnotation(Story::class.java).title.takeIf { it.isNotEmpty() } ?: fragmentName.simpleName
+        val description = element.getAnnotation(Story::class.java).description.takeIf { it.isNotEmpty() }?.let {
+            "\"$it\""
+        } ?: "null"
+        return """
+        object: FragmentStory {
+            override val title = "$title"
+            override val description: String? = $description
+            override fun generateFragment() = ${fragmentName.canonicalName}()
+        }"""
     }
 
 

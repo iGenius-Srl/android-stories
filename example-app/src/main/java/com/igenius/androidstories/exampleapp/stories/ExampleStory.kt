@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import com.igenius.androidstories.annotations.Story
 import com.igenius.androidstories.exampleapp.R
 
-@Story
+@Story(
+    title = "Example 1 title"
+)
 fun example1(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -14,7 +16,10 @@ fun example1(
     return inflater.inflate(R.layout.activity_main, container, false)
 }
 
-@Story
+@Story(
+    title = "Example 2 title",
+    description = "Example 2 description"
+)
 fun example2(
     inflater: LayoutInflater,
     container: ViewGroup?,
