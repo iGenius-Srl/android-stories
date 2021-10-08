@@ -10,4 +10,3 @@ rootProject.name = "AndroidStoriesApp"
 include ':app'
 include ':androidstories'
 include ':androidstories-processor'
-include ':myapplication'

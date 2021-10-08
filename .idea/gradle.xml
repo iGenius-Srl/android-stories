@@ -13,7 +13,6 @@
             <option value="$PROJECT_DIR$/androidstories" />
             <option value="$PROJECT_DIR$/androidstories-processor" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/myapplication" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
