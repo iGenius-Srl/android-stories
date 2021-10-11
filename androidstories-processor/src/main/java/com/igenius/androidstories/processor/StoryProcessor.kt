@@ -29,9 +29,14 @@ class StoryProcessor : AbstractProcessor() {
                     generatedFragments.add(element to it.first)
                     it.second.writeTo(generatedSourcesRoot)
                 }
-            } else if(element.kind == ElementKind.CLASS) {
-                if((element as? TypeElement)?.superclass.toString() == "androidx.fragment.app.Fragment") {
-                    generatedFragments.add(element to ClassName(element.packageName, element.simpleName.toString()))
+            } else if (element.kind == ElementKind.CLASS) {
+                if ((element as? TypeElement)?.superclass.toString() == "androidx.fragment.app.Fragment") {
+                    generatedFragments.add(
+                        element to ClassName(
+                            element.packageName,
+                            element.simpleName.toString()
+                        )
+                    )
                 }
             }
         }
@@ -89,7 +94,10 @@ class StoryProcessor : AbstractProcessor() {
 
     private val Element.packageName: String get() = processingEnv.elementUtils.getPackageOf(this).qualifiedName.toString()
 
-    private fun generateProvider(generatedSourcesRoot: File, classNames: List<Pair<Element, ClassName>>) {
+    private fun generateProvider(
+        generatedSourcesRoot: File,
+        classNames: List<Pair<Element, ClassName>>
+    ) {
         var packageName: String? = null
         classNames.forEach { (_, className) ->
             packageName?.let {
@@ -126,12 +134,13 @@ class StoryProcessor : AbstractProcessor() {
                                 )
                         )
                             .addModifiers(KModifier.OVERRIDE)
-                            .initializer(
-                                """listOf(${
+                            .getter(FunSpec.getterBuilder().addStatement(
+                                """return listOf(${
                                     classNames.joinToString(",") {
                                         generateFragmentStory(it.first, it.second)
                                     }
                                 })""".trimIndent()
+                            ).build()
                             )
                             .build()
                     )
@@ -143,10 +152,12 @@ class StoryProcessor : AbstractProcessor() {
     }
 
     private fun generateFragmentStory(element: Element, fragmentName: ClassName): String {
-        val title = element.getAnnotation(Story::class.java).title.takeIf { it.isNotEmpty() } ?: fragmentName.simpleName
-        val description = element.getAnnotation(Story::class.java).description.takeIf { it.isNotEmpty() }?.let {
-            "\"$it\""
-        } ?: "null"
+        val title = element.getAnnotation(Story::class.java).title.takeIf { it.isNotEmpty() }
+            ?: fragmentName.simpleName
+        val description =
+            element.getAnnotation(Story::class.java).description.takeIf { it.isNotEmpty() }?.let {
+                "\"$it\""
+            } ?: "null"
         return """
         object: FragmentStory {
             override val title = "$title"

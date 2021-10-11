@@ -8,9 +8,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".ExampleStoriesApp"
         android:theme="@style/Theme.AndroidStoriesApp">
         <activity
-            android:name="com.igenius.androidstories.exampleapp.MainActivity"
+            android:name="com.igenius.androidstories.app.StoriesActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

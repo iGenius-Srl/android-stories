@@ -2,4 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.igenius.androidstories.app">
 
+    <application>
+        <activity
+            android:name=".StoriesActivity"
+            android:exported="true"
+            android:label="@string/title_activity_stories"
+            android:theme="@style/Theme.AndroidStoriesApp.NoActionBar" />
+    </application>
+
 </manifest>

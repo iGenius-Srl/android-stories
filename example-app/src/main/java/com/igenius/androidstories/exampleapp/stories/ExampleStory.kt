@@ -14,7 +14,7 @@ import com.igenius.androidstories.exampleapp.R
 fun example1(
     inflater: LayoutInflater,
     container: ViewGroup?,
-): View = inflater.inflate(R.layout.activity_main, container, false)
+            ): View = inflater.inflate(R.layout.activity_main, container, false)
 
 @Story(
     title = "Example 2 title",

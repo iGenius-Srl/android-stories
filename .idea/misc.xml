@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../Library/Android/sdk/platforms/android-31/data/res/layout/simple_list_item_2.xml" value="0.1" />
+        <entry key="androidstories-app/src/main/res/layout/activity_stories.xml" value="0.3234375" />
+        <entry key="androidstories-app/src/main/res/layout/fragment_list.xml" value="0.3234375" />
+        <entry key="androidstories-app/src/main/res/layout/fragment_story.xml" value="0.12637362637362637" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/list">
+
+    <fragment
+        android:id="@+id/list"
+        android:name="com.igenius.androidstories.app.list.ListFragment"
+        android:label="@string/list_fragment_label"
+        tools:layout="@layout/fragment_list">
+        <action
+            android:id="@+id/action_list_to_story"
+            app:destination="@id/story" />
+    </fragment>
+    <fragment
+        android:id="@+id/story"
+        android:name="com.igenius.androidstories.app.story.StoryFragment"
+        android:label="@string/story_fragment_label"
+        tools:layout="@layout/fragment_story">
+    </fragment>
+</navigation>
