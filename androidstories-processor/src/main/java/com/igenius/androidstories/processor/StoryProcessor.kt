@@ -137,7 +137,7 @@ class StoryProcessor : AbstractProcessor() {
                             .getter(FunSpec.getterBuilder().addStatement(
                                 """return listOf(${
                                     classNames.joinToString(",") {
-                                        generateFragmentStory(it.first, it.second)
+                                        generateFragmentStory(it.first, it.second, classNames.indexOf(it))
                                     }
                                 })""".trimIndent()
                             ).build()
@@ -151,7 +151,7 @@ class StoryProcessor : AbstractProcessor() {
         file.writeTo(generatedSourcesRoot)
     }
 
-    private fun generateFragmentStory(element: Element, fragmentName: ClassName): String {
+    private fun generateFragmentStory(element: Element, fragmentName: ClassName, id: Int): String {
         val title = element.getAnnotation(Story::class.java).title.takeIf { it.isNotEmpty() }
             ?: fragmentName.simpleName
         val description =
@@ -160,6 +160,7 @@ class StoryProcessor : AbstractProcessor() {
             } ?: "null"
         return """
         object: FragmentStory {
+            override val id: Int = $id
             override val title = "$title"
             override val description: String? = $description
             override fun generateFragment() = ${fragmentName.canonicalName}()

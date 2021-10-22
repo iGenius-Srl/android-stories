@@ -6,8 +6,12 @@ interface StoriesProvider {
     val stories: List<FragmentStory>
 }
 
-interface FragmentStory {
+interface ViewStory {
+    val id: Int
     val title: String
     val description: String?
+}
+
+interface FragmentStory: ViewStory {
     fun generateFragment(): Fragment
 }

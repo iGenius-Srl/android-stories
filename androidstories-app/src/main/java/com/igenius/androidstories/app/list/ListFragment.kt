@@ -21,8 +21,8 @@ class ListFragment : Fragment() {
         val binding = FragmentListBinding.inflate(inflater, container, false)
 
         val stories = (requireContext().applicationContext as StoriesApp).storiesProvider.stories
-        binding.recycler.adapter = StoriesAdapter(stories) { storyId ->
-            val action = ListFragmentDirections.actionListToStory(storyId)
+        binding.recycler.adapter = StoriesAdapter(stories) { story ->
+            val action = ListFragmentDirections.actionListToStory(story.id, story.title)
             findNavController().navigate(action)
         }
 
@@ -33,12 +33,12 @@ class ListFragment : Fragment() {
 
 class StoriesAdapter(
     val stories: List<FragmentStory>,
-    private val onSelect: (index: Int) -> Unit
+    private val onSelect: (story: FragmentStory) -> Unit
 ): RecyclerView.Adapter<StoriesAdapter.StoryHolder>() {
 
     class StoryHolder(
+        parent: ViewGroup,
         val onSelect: (index: Int) -> Unit,
-        parent: ViewGroup
     ): RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
     ) {
@@ -57,7 +57,9 @@ class StoriesAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = StoryHolder(onSelect, parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = StoryHolder(parent) { position ->
+        onSelect(stories[position])
+    }
 
     override fun onBindViewHolder(holder: StoryHolder, position: Int) {
         holder.bind(stories[position])

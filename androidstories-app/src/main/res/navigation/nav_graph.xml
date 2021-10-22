@@ -17,10 +17,13 @@
     <fragment
         android:id="@+id/story"
         android:name="com.igenius.androidstories.app.story.StoryFragment"
-        android:label="@string/story_fragment_label"
+        android:label="{title}"
         tools:layout="@layout/fragment_story">
         <argument
             android:name="storyId"
             app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>
