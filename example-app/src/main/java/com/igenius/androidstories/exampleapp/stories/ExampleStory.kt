@@ -9,21 +9,21 @@ import com.igenius.androidstories.annotations.Story
 import com.igenius.androidstories.exampleapp.R
 
 @Story(
-    title = "Example 1 title"
+    title = "Button"
 )
 fun example1(
     inflater: LayoutInflater,
     container: ViewGroup?,
-): View = inflater.inflate(R.layout.activity_main, container, false)
+): View = inflater.inflate(R.layout.button_story, container, false)
 
 @Story(
-    title = "Example 2 title",
+    title = "Button secondary",
     description = "Example 2 description"
 )
 fun example2(
     inflater: LayoutInflater,
     container: ViewGroup?,
-): View = inflater.inflate(R.layout.activity_main, container, false)
+): View = inflater.inflate(R.layout.button_secondary_story, container, false)
 
 @Story(
     title = "Example a total fragment"
@@ -33,5 +33,5 @@ class ExampleFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.activity_main, container, false)
+    ): View = inflater.inflate(R.layout.button_story, container, false)
 }

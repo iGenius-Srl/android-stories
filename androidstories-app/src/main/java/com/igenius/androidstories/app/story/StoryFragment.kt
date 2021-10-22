@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import com.igenius.androidstories.app.StoriesApp
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import com.igenius.androidstories.app.R
-
-
-const val STORY_ID = "story_id"
+import java.lang.IllegalStateException
 
 /**
  * A simple [Fragment] subclass.
@@ -23,9 +21,8 @@ class StoryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            storyId = it.getInt(STORY_ID)
-        }
+        storyId = arguments?.let { StoryFragmentArgs.fromBundle(it) }?.storyId
+            ?: throw IllegalStateException("StoryFragment: No storyId provided")
     }
 
     override fun onCreateView(

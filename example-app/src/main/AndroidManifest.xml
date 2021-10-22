@@ -10,15 +10,6 @@
         android:supportsRtl="true"
         android:name=".ExampleStoriesApp"
         android:theme="@style/Theme.AndroidStoriesApp">
-        <activity
-            android:name="com.igenius.androidstories.app.StoriesActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

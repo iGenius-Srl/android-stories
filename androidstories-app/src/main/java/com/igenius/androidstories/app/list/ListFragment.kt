@@ -9,11 +9,8 @@ import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.igenius.androidstories.app.FragmentStory
-import com.igenius.androidstories.app.R
 import com.igenius.androidstories.app.StoriesApp
 import com.igenius.androidstories.app.databinding.FragmentListBinding
-import com.igenius.androidstories.app.story.STORY_ID
-import com.igenius.androidstories.app.story.StoryFragment
 
 class ListFragment : Fragment() {
 
@@ -25,10 +22,8 @@ class ListFragment : Fragment() {
 
         val stories = (requireContext().applicationContext as StoriesApp).storiesProvider.stories
         binding.recycler.adapter = StoriesAdapter(stories) { storyId ->
-            val args = Bundle().also {
-                it.putInt(STORY_ID, storyId)
-            }
-            findNavController().navigate(R.id.action_list_to_story, args)
+            val action = ListFragmentDirections.actionListToStory(storyId)
+            findNavController().navigate(action)
         }
 
         return binding.root

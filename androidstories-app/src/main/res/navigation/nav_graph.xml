@@ -19,5 +19,8 @@
         android:name="com.igenius.androidstories.app.story.StoryFragment"
         android:label="@string/story_fragment_label"
         tools:layout="@layout/fragment_story">
+        <argument
+            android:name="storyId"
+            app:argType="integer" />
     </fragment>
 </navigation>
