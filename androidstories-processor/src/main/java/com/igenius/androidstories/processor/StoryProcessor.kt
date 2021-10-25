@@ -161,7 +161,7 @@ class StoryProcessor : AbstractProcessor() {
         return """
         object: FragmentStory {
             override val id: Int = $id
-            override val title = "$title"
+            override val completePath = "$title"
             override val description: String? = $description
             override fun generateFragment() = ${fragmentName.canonicalName}()
         }"""

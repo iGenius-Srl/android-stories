@@ -17,7 +17,7 @@ import com.igenius.androidstories.app.databinding.FragmentListBinding
 class ListFragment : Fragment() {
 
     private val stories by lazy {
-        (requireContext().applicationContext as StoriesApp).storiesProvider.stories.sortedBy { it.title }
+        (requireContext().applicationContext as StoriesApp).storiesProvider.stories.sortedBy { it.completePath }
     }
 
     override fun onCreateView(
