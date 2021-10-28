@@ -1,17 +1,15 @@
 package com.igenius.androidstories.app
 
+import com.igenius.androidstories.app.data.StoriesFolder
+import com.igenius.androidstories.app.data.StoryNode
+import com.igenius.androidstories.app.data.TestStory
+import com.igenius.androidstories.app.data.ViewStory
 import com.igenius.androidstories.app.utils.generateFolderTree
 import org.junit.Test
 
 import org.junit.Assert.*
 
 class FolderTreeTests {
-
-    data class TestStory(
-        override val id: Int,
-        override val completePath: String,
-        override val description: String = "",
-    ): ViewStory
 
     @Test
     fun `without folders it returns just the list`() {

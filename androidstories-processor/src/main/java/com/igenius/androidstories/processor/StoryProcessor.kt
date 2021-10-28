@@ -118,7 +118,7 @@ class StoryProcessor : AbstractProcessor() {
                 TypeSpec.classBuilder(providerName)
                     .addSuperinterface(
                         ClassName(
-                            "com.igenius.androidstories.app",
+                            "com.igenius.androidstories.app.data",
                             "StoriesProvider"
                         )
                     )
@@ -128,7 +128,7 @@ class StoryProcessor : AbstractProcessor() {
                             ClassName("kotlin.collections", "List")
                                 .plusParameter(
                                     ClassName(
-                                        "com.igenius.androidstories.app",
+                                        "com.igenius.androidstories.app.data",
                                         "FragmentStory"
                                     )
                                 )

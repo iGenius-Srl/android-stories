@@ -9,7 +9,7 @@ import com.igenius.androidstories.annotations.Story
 import com.igenius.androidstories.exampleapp.R
 
 @Story(
-    title = "Button"
+    title = "Button/Primary"
 )
 fun example1(
     inflater: LayoutInflater,
@@ -17,10 +17,28 @@ fun example1(
 ): View = inflater.inflate(R.layout.button_story, container, false)
 
 @Story(
-    title = "Button secondary",
-    description = "Example 2 description"
+    title = "Button/Secondary",
+    description = "Example 2 description",
 )
 fun example2(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+): View = inflater.inflate(R.layout.button_secondary_story, container, false)
+
+@Story(
+    title = "Button/Inner/Secondary",
+    description = "Example 4 description"
+)
+fun example4(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+): View = inflater.inflate(R.layout.button_secondary_story, container, false)
+
+@Story(
+    title = "Button/ZetaInner/Secondary",
+    description = "Example 5 description"
+)
+fun example5(
     inflater: LayoutInflater,
     container: ViewGroup?,
 ): View = inflater.inflate(R.layout.button_secondary_story, container, false)

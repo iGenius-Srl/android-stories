@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="item_margin">16dp</dimen>
+    <dimen name="item_margin">12dp</dimen>
+    <dimen name="folder_distance">24dp</dimen>
 </resources>

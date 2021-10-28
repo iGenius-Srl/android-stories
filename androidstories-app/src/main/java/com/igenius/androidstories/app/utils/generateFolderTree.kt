@@ -1,10 +1,11 @@
 package com.igenius.androidstories.app.utils
 
-import com.igenius.androidstories.app.StoriesFolder
-import com.igenius.androidstories.app.ViewStory
+import com.igenius.androidstories.app.data.StoriesFolder
+import com.igenius.androidstories.app.data.StoryNode
+import com.igenius.androidstories.app.data.ViewStory
 
 fun generateFolderTree(stories: List<ViewStory>) =
-    StoriesFolder("root").also { root ->
+    StoriesFolder().also { root ->
         stories.forEach { generateCompletePath(root, it) }
     }
 

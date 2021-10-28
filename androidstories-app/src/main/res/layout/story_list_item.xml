@@ -7,24 +7,49 @@
     android:padding="@dimen/item_margin"
     android:layout_height="wrap_content">
 
+
+    <ImageView
+        android:id="@+id/iconFolder"
+        android:src="@drawable/ic_baseline_folder_24"
+        app:tint="?colorPrimaryVariant"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <ImageView
+        android:id="@+id/iconStory"
+        android:src="@drawable/ic_baseline_history_edu_24"
+        app:tint="?colorAccent"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
-        tools:text="Story title"
         android:id="@id/title"
+        style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_marginStart="@dimen/item_margin"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/iconFolder"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Story title" />
+
     <TextView
-        tools:text="Story long long example subtitle"
         android:id="@+id/subtitle"
+        android:visibility="gone"
+        style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/title"
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        tools:text="Story long long example subtitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
