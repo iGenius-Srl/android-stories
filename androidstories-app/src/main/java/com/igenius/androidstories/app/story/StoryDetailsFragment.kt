@@ -5,24 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.PopupMenu
 import com.igenius.androidstories.app.StoriesApp
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import com.igenius.androidstories.app.R
 import java.lang.IllegalStateException
 
-/**
- * A simple [Fragment] subclass.
- * Use the [StoryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class StoryFragment : Fragment() {
+class StoryDetailsFragment : Fragment() {
     private var binding : FragmentStoryBinding? = null
     private var storyId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        storyId = arguments?.let { StoryFragmentArgs.fromBundle(it) }?.storyId
-            ?: throw IllegalStateException("StoryFragment: No storyId provided")
+        storyId = arguments?.let { StoryDetailsFragmentArgs.fromBundle(it) }?.storyId
+            ?: throw IllegalStateException("StoryDetailsFragment: No storyId provided")
     }
 
     override fun onCreateView(
@@ -37,10 +34,30 @@ class StoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val story = (requireContext().applicationContext as StoriesApp).storiesProvider.stories[storyId]
+        val fragment = story.generateFragment()
+        fragment.selectVariant(story.variants[0])
+
+        binding?.description?.text = story.description ?: "No description"
+        binding?.variantLabel?.text = story.variants[0]
+
+        binding?.variantView?.let { variantView ->
+            val menu = PopupMenu(context, variantView).apply {
+                setOnMenuItemClickListener { menItem ->
+                    binding?.variantLabel?.text = menItem.title.toString()
+                    fragment.selectVariant(menItem.title.toString())
+                    return@setOnMenuItemClickListener false
+                }
+                story.variants.forEach { variant -> menu.add(variant) }
+            }
+
+            variantView.setOnClickListener {
+                menu.show()
+            }
+        }
 
         childFragmentManager
             .beginTransaction()
-            .replace(R.id.story_placeholder, story.generateFragment())
+            .replace(R.id.story_placeholder, fragment)
             .commit()
     }
 }

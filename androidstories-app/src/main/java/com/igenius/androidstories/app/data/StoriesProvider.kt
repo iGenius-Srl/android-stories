@@ -1,6 +1,6 @@
 package com.igenius.androidstories.app.data
 
-import androidx.fragment.app.Fragment
+import com.igenius.androidstories.app.StoryFragment
 
 interface StoriesProvider {
     val stories: List<FragmentStory>
@@ -9,8 +9,9 @@ interface StoriesProvider {
 interface ViewStory : StoryNode {
     val id: Int
     val description: String?
+    val variants: Array<String>
 }
 
 interface FragmentStory: ViewStory {
-    fun generateFragment(): Fragment
+    fun generateFragment(): StoryFragment
 }

@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/story"
-        android:name="com.igenius.androidstories.app.story.StoryFragment"
+        android:name="com.igenius.androidstories.app.story.StoryDetailsFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_story">
         <argument

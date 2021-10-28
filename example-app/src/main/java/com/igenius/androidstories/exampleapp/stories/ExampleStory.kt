@@ -1,11 +1,12 @@
 package com.igenius.androidstories.exampleapp.stories
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.Button
+import androidx.core.content.ContextCompat
 import com.igenius.androidstories.annotations.Story
+import com.igenius.androidstories.app.StoryFragment
 import com.igenius.androidstories.exampleapp.R
 
 @Story(
@@ -44,12 +45,23 @@ fun example5(
 ): View = inflater.inflate(R.layout.button_secondary_story, container, false)
 
 @Story(
-    title = "Example a total fragment"
+    title = "Variable story example",
+    description = "This is a story with different variants, press on the right to select ones",
+    variants = ["Red", "Blue"]
 )
-class ExampleFragment: Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.button_story, container, false)
+class ExampleFragment: StoryFragment() {
+
+    override fun getLayoutRes() = R.layout.button_story
+
+    override fun onVariantSelected(variant: String) {
+        view?.findViewById<Button>(R.id.button)?.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                when (variant) {
+                    "Red" -> android.R.color.holo_red_light
+                    else -> android.R.color.holo_blue_bright
+                }
+            )
+        )
+    }
 }
