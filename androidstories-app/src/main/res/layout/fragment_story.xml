@@ -14,48 +14,30 @@
         android:layout_height="wrap_content"
         android:id="@+id/config_bar">
 
-        <View
-            android:background="?selectableItemBackground"
-            app:layout_constraintStart_toStartOf="@id/variant_label"
-            app:layout_constraintTop_toTopOf="@id/variant_label"
-            app:layout_constraintBottom_toBottomOf="@id/variant_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/variant_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
-
-        <ImageView
-            android:layout_margin="@dimen/item_margin"
-            android:id="@+id/variant_icon"
-            app:tint="?android:attr/textColorPrimaryInverse"
-            android:src="@drawable/ic_baseline_dynamic_feed_24"
-            app:layout_constraintTop_toTopOf="@id/variant_label"
-            app:layout_constraintBottom_toBottomOf="@id/variant_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="16dp"
-            android:layout_height="16dp" />
-        <TextView
-            style="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+        <Button
+            android:id="@+id/button_variant"
             tools:text="Selected variant"
-            android:id="@+id/variant_label"
-            android:textStyle="bold"
-            android:padding="@dimen/item_margin"
+            android:paddingStart="@dimen/item_horizontal_margin"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+            app:drawableTint="?android:attr/textColorPrimaryInverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            android:drawableEnd="@drawable/ic_baseline_dynamic_feed_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/variant_icon"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"
-            tools:text="Story description"
             android:ellipsize="end"
             android:maxLines="1"
+            android:layout_marginStart="@dimen/item_horizontal_margin"
             android:id="@+id/description"
-            android:padding="@dimen/item_margin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@id/variant_view"
+            app:layout_constraintEnd_toStartOf="@id/button_variant"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

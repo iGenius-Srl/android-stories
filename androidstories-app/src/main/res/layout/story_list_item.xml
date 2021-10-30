@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?selectableItemBackground"
     android:layout_width="match_parent"
-    android:padding="@dimen/item_margin"
+    android:paddingBottom="@dimen/item_vertical_margin"
+    android:paddingTop="@dimen/item_vertical_margin"
+    android:paddingStart="@dimen/item_horizontal_margin"
+    android:paddingEnd="@dimen/item_horizontal_margin"
     android:layout_height="wrap_content">
 
 
@@ -32,7 +35,7 @@
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/item_margin"
+        android:layout_marginStart="@dimen/item_vertical_margin"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iconFolder"

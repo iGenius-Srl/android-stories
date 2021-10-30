@@ -7,14 +7,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.igenius.androidstories.app.StoriesApp
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import com.igenius.androidstories.app.R
+import com.igenius.androidstories.app.StoryFragment
 import java.lang.IllegalStateException
 
 class StoryDetailsFragment : Fragment() {
     private var binding : FragmentStoryBinding? = null
     private var storyId: Int = 0
+
+    private val viewModel: StoryDetailsViewModel by viewModels()
+
+    private var storyFragment: StoryFragment?
+        get() = childFragmentManager.findFragmentByTag("story_fragment") as? StoryFragment
+        set(value) {
+            value?.let {
+                childFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.story_placeholder, it, "story_fragment")
+                    .commit()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,30 +52,30 @@ class StoryDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val story = (requireContext().applicationContext as StoriesApp).storiesProvider.stories[storyId]
-        val fragment = story.generateFragment()
-        fragment.selectVariant(story.variants[0])
+        storyFragment = story.generateFragment()
 
         binding?.description?.text = story.description ?: "No description"
-        binding?.variantLabel?.text = story.variants[0]
 
-        binding?.variantView?.let { variantView ->
-            val menu = PopupMenu(context, variantView).apply {
-                setOnMenuItemClickListener { menItem ->
-                    binding?.variantLabel?.text = menItem.title.toString()
-                    fragment.selectVariant(menItem.title.toString())
-                    return@setOnMenuItemClickListener false
-                }
-                story.variants.forEach { variant -> menu.add(variant) }
+        binding?.buttonVariant?.apply {
+            val popup = PopupMenu(context, this)
+            popup.setOnMenuItemClickListener { menItem ->
+                viewModel.selectVariant(menItem.title.toString())
+                return@setOnMenuItemClickListener false
             }
-
-            variantView.setOnClickListener {
-                menu.show()
-            }
+            story.variants.forEach { variant -> popup.menu.add(variant) }
+            setOnClickListener { popup.show() }
         }
 
-        childFragmentManager
-            .beginTransaction()
-            .replace(R.id.story_placeholder, fragment)
-            .commit()
+        if(viewModel.selectedVariant.value.isNullOrEmpty())
+            viewModel.selectVariant(story.variants[0])
+
+        viewModel.selectedVariant.observe(viewLifecycleOwner) {
+            it?.let { selectVariant(it) }
+        }
+    }
+
+    private fun selectVariant(variant: String) {
+        binding?.buttonVariant?.text = variant
+        storyFragment?.selectVariant(variant)
     }
 }

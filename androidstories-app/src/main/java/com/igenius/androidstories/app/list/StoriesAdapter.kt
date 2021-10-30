@@ -56,7 +56,7 @@ class NodeItem(
 
         itemView.run {
             updatePaddingRelative(
-                start = resources.getDimensionPixelSize(R.dimen.item_margin)
+                start = resources.getDimensionPixelSize(R.dimen.item_horizontal_margin)
                         + resources.getDimensionPixelSize(R.dimen.folder_distance) * (model.rootDistance - 1)
             )
             setOnClickListener { onSelect(model.node) }
