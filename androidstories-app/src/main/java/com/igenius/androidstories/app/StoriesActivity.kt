@@ -110,7 +110,7 @@ class StoriesActivity : AppCompatActivity() {
                 }
                 return@setOnMenuItemClickListener false
             }
-            menu.findItem(R.id.night_mode_item).isChecked  = nightMode
+            menu.findItem(R.id.night_mode_item).isChecked = nightMode
         }
     }
 

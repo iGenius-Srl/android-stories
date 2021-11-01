@@ -10,10 +10,9 @@
         app:navigationIcon="@drawable/ic_baseline_close_24"
         app:elevation="4dp"
         android:id="@+id/toolbar"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
         android:background="?colorPrimary"
-        app:titleTextColor="?colorOnPrimary"
-        app:subtitleTextColor="?colorOnPrimary"
-        app:navigationIconTint="?colorOnPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <FrameLayout

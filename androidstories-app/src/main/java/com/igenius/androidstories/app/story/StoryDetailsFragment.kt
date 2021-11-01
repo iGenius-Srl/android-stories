@@ -1,25 +1,15 @@
 package com.igenius.androidstories.app.story
 
-import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.core.internal.view.SupportMenuItem.SHOW_AS_ACTION_ALWAYS
 import androidx.core.view.get
 import androidx.fragment.app.viewModels
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import java.lang.IllegalStateException
-
-import android.util.TypedValue
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
-import android.text.style.ForegroundColorSpan
-
-import android.text.SpannableString
 import com.igenius.androidstories.app.*
 import com.igenius.androidstories.app.utils.commitFragment
 import com.igenius.androidstories.app.utils.retrieveFragment
@@ -90,7 +80,7 @@ class StoryDetailsFragment : Fragment() {
             setNavigationOnClickListener {
                 (activity as StoriesActivity).closeStory()
             }
-            val variantSubmenu = menu.addSubMenu(menuOptionText(story.variants[0]))
+            val variantSubmenu = menu.addSubMenu(story.variants[0])
             variantSubmenu.item.setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
             story.variants.forEach { variant -> variantSubmenu?.add(variant) }
             setOnMenuItemClickListener {
@@ -100,7 +90,7 @@ class StoryDetailsFragment : Fragment() {
             }
 
             menu.add("Fullscreen toggle").let {
-                setIcon(it, R.drawable.ic_baseline_open_in_full_16)
+                it.setIcon(R.drawable.ic_baseline_open_in_full_16)
                 it.setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
                 it.setOnMenuItemClickListener {
                     (activity as StoriesActivity).toggleFullView()
@@ -121,7 +111,7 @@ class StoryDetailsFragment : Fragment() {
     }
 
     private fun selectVariant(variant: String) {
-        binding?.toolbar?.menu?.getItem(0)?.title = menuOptionText(variant)
+        binding?.toolbar?.menu?.getItem(0)?.title = variant
         storyFragment?.selectVariant(variant)
     }
 
@@ -131,31 +121,12 @@ class StoryDetailsFragment : Fragment() {
             else R.drawable.ic_baseline_close_24
         )
         menu?.get(1)?.let {
-            setIcon(
-                it,
+            it.setIcon(
                 if(configuration.isFullView) R.drawable.ic_baseline_close_fullscreen_16
                 else R.drawable.ic_baseline_open_in_full_16
             )
             it.isVisible = configuration.canChangeFullView
         }
-    }
-
-    private val colorOnPrimary by lazy {
-        TypedValue().also {
-            requireContext().theme.resolveAttribute(R.attr.colorOnPrimary, it, true)
-        }.data
-    }
-
-    private fun setIcon(menuItem: MenuItem, @DrawableRes icon: Int) {
-        val drawable = ContextCompat.getDrawable(requireContext(), icon) ?: return
-        menuItem.icon = DrawableCompat.wrap(drawable).apply {
-            setTint(colorOnPrimary)
-            setTintMode(PorterDuff.Mode.SRC_IN)
-        }
-    }
-
-    private fun menuOptionText(text: String) = SpannableString(text).also {
-        it.setSpan(ForegroundColorSpan(colorOnPrimary), 0, it.length, 0)
     }
 
     companion object {
