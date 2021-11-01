@@ -10,7 +10,7 @@
         app:navigationIcon="@drawable/ic_baseline_close_24"
         app:elevation="4dp"
         android:id="@+id/toolbar"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        android:theme="@style/Theme.AndroidStoriesApp.Toolbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
         android:background="?colorPrimary"
         android:layout_width="match_parent"
