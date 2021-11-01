@@ -5,4 +5,5 @@
     <string name="variants">Variants</string>
     <string name="full_view">Full view</string>
     <string name="close_full_view">Close full view</string>
+    <string name="no_story_selected">No story selected</string>
 </resources>

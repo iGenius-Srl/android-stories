@@ -32,6 +32,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline" />
+
+        <ConstraintOverride
+            android:id="@id/story_placeholder_text"
+            android:visibility="visible"/>
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -59,6 +63,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <ConstraintOverride
+            android:id="@id/story_placeholder_text"
+            android:visibility="gone"/>
     </ConstraintSet>
 
     <Transition
