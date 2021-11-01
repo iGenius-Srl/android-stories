@@ -4,7 +4,7 @@
     android:background="?colorBackgroundFloating"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutDescription="@xml/stories_activity_v2_scene">
+    app:layoutDescription="@xml/stories_activity_scene">
 
     <View
         android:id="@+id/toolbar_background"

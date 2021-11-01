@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app.list
+package com.igenius.androidstories.app
 
 import android.view.LayoutInflater
 import android.view.View

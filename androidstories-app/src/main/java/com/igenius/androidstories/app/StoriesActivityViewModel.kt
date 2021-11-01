@@ -7,7 +7,6 @@ import com.igenius.androidstories.app.data.StoriesFolder
 import com.igenius.androidstories.app.data.StoriesProvider
 import com.igenius.androidstories.app.data.StoryNode
 import com.igenius.androidstories.app.data.ViewStory
-import com.igenius.androidstories.app.list.NodeItemModel
 import com.igenius.androidstories.app.utils.generateFolderTree
 
 class StoriesActivityViewModel: ViewModel() {

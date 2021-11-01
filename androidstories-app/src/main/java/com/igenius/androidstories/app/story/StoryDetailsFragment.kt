@@ -21,12 +21,16 @@ import android.text.style.ForegroundColorSpan
 
 import android.text.SpannableString
 import com.igenius.androidstories.app.*
+import com.igenius.androidstories.app.utils.commitFragment
+import com.igenius.androidstories.app.utils.retrieveFragment
 import java.io.Serializable
 
 data class StoryDetailsConfiguration(
     val isFullView: Boolean,
     val canChangeFullView: Boolean
 ): Serializable
+
+private const val STORY_FRAGMENT_TAG = "story_fragment"
 
 class StoryDetailsFragment : Fragment() {
     private var binding: FragmentStoryBinding? = null
@@ -60,9 +64,9 @@ class StoryDetailsFragment : Fragment() {
     private val viewModel: StoryDetailsViewModel by viewModels()
 
     private var storyFragment: StoryFragment?
-        get() = childFragmentManager.retrieveFragment("story_fragment")
+        get() = childFragmentManager.retrieveFragment(STORY_FRAGMENT_TAG)
         set(value) {
-            childFragmentManager.commitFragment(R.id.story_placeholder, "story_fragment", value)
+            childFragmentManager.commitFragment(R.id.story_placeholder, STORY_FRAGMENT_TAG, value)
         }
 
     override fun onCreateView(

@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app
+package com.igenius.androidstories.app.utils
 
 import android.view.View
 import android.view.animation.Animation
@@ -7,7 +7,6 @@ import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.igenius.androidstories.app.story.StoryDetailsFragment
 
 fun View.animate(
     @AnimRes animRes: Int,

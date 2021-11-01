@@ -3,17 +3,17 @@ package com.igenius.androidstories.app
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.view.animation.Animation
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.igenius.androidstories.app.data.StoriesFolder
 import com.igenius.androidstories.app.data.ViewStory
-import com.igenius.androidstories.app.list.StoriesAdapter
-import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import com.igenius.androidstories.app.databinding.StoriesActivityBinding
 import com.igenius.androidstories.app.story.StoryDetailsConfiguration
 import com.igenius.androidstories.app.story.StoryDetailsFragment
+import com.igenius.androidstories.app.utils.animate
+import com.igenius.androidstories.app.utils.commitFragment
+import com.igenius.androidstories.app.utils.retrieveFragment
 
 private const val DETAILS_FRAGMENT_TAG = "details_fragment"
 
