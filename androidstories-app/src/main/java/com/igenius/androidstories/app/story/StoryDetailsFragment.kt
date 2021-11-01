@@ -3,9 +3,10 @@ package com.igenius.androidstories.app.story
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.internal.view.SupportMenuItem.SHOW_AS_ACTION_ALWAYS
+import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.fragment.app.viewModels
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
@@ -28,7 +29,7 @@ class StoryDetailsFragment : Fragment() {
     var storyId: Int
         get() = arguments?.getInt(STORY_ID)
             ?: throw IllegalStateException("StoryDetailsFragment: No storyId provided")
-        set(value) {
+        private set(value) {
             arguments = (arguments ?: Bundle()).apply { putInt(STORY_ID, value) }
         }
 
@@ -80,22 +81,21 @@ class StoryDetailsFragment : Fragment() {
             setNavigationOnClickListener {
                 (activity as StoriesActivity).closeStory()
             }
-            val variantSubmenu = menu.addSubMenu(story.variants[0])
-            variantSubmenu.item.setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
-            story.variants.forEach { variant -> variantSubmenu?.add(variant) }
-            setOnMenuItemClickListener {
-                if(story.variants.contains(it.title))
-                    viewModel.selectVariant(it.title.toString())
-                return@setOnMenuItemClickListener false
-            }
 
-            menu.add("Fullscreen toggle").let {
-                it.setIcon(R.drawable.ic_baseline_open_in_full_16)
-                it.setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
-                it.setOnMenuItemClickListener {
-                    (activity as StoriesActivity).toggleFullView()
-                    return@setOnMenuItemClickListener false
+            inflateMenu(R.menu.story_details_fragment_menu)
+            menu.findItem(R.id.variants_item).subMenu.run {
+                story.variants.forEach { variant ->
+                    add(variant).isCheckable = true
                 }
+            }
+            setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.fullView_item -> (activity as StoriesActivity).setFullView(true)
+                    R.id.closeFullView_item -> (activity as StoriesActivity).setFullView(false)
+                    else -> if(it.itemId != R.id.variants_item && story.variants.contains(it.title))
+                        viewModel.selectVariant(it.title.toString())
+                }
+                return@setOnMenuItemClickListener false
             }
         }
 
@@ -111,22 +111,22 @@ class StoryDetailsFragment : Fragment() {
     }
 
     private fun selectVariant(variant: String) {
-        binding?.toolbar?.menu?.getItem(0)?.title = variant
+        binding?.toolbar?.menu?.findItem(R.id.variants_item)?.run {
+            title = variant
+            subMenu.forEach {
+                it.isChecked = it.title == variant
+            }
+        }
         storyFragment?.selectVariant(variant)
     }
 
-    private fun applyConfiguration(configuration: StoryDetailsConfiguration) = binding?.toolbar?.apply {
+    private fun applyConfiguration(config: StoryDetailsConfiguration) = binding?.toolbar?.apply {
         setNavigationIcon(
-            if(configuration.isFullView) R.drawable.ic_baseline_arrow_back_24
+            if(config.isFullView) R.drawable.ic_baseline_arrow_back_24
             else R.drawable.ic_baseline_close_24
         )
-        menu?.get(1)?.let {
-            it.setIcon(
-                if(configuration.isFullView) R.drawable.ic_baseline_close_fullscreen_16
-                else R.drawable.ic_baseline_open_in_full_16
-            )
-            it.isVisible = configuration.canChangeFullView
-        }
+        menu.findItem(R.id.fullView_item).isVisible = config.canChangeFullView && !config.isFullView
+        menu.findItem(R.id.closeFullView_item).isVisible = config.canChangeFullView && config.isFullView
     }
 
     companion object {

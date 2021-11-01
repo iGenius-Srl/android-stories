@@ -130,5 +130,5 @@ class StoriesActivity : AppCompatActivity() {
     }
 
     fun closeStory() = viewModel.toggleStory(null)
-    fun toggleFullView() = viewModel.toggleFullView()
+    fun setFullView(fullView: Boolean) = viewModel.setFullView(fullView)
 }

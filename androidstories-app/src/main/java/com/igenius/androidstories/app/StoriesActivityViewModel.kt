@@ -38,10 +38,6 @@ class StoriesActivityViewModel: ViewModel() {
     private val _fullViewLiveData = MutableLiveData(false)
     val fullViewLiveData: LiveData<Boolean> get() = _fullViewLiveData
 
-    fun toggleFullView() {
-        setFullView(!(_fullViewLiveData.value ?: true))
-    }
-
     fun setFullView(value: Boolean) {
         _fullViewLiveData.value = value
     }

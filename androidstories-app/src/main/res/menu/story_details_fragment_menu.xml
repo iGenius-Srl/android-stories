@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group>
+        <item android:id="@+id/variants_item"
+            app:showAsAction="ifRoom|withText"
+            android:title="@string/variants">
+            <menu android:checkableBehavior="single">
+            </menu>
+        </item>
+        <item android:id="@+id/fullView_item"
+            android:icon="@drawable/ic_baseline_open_in_full_16"
+            app:showAsAction="ifRoom"
+            android:title="@string/full_view" />
+        <item android:id="@+id/closeFullView_item"
+            android:icon="@drawable/ic_baseline_close_fullscreen_16"
+            app:showAsAction="ifRoom"
+            android:title="@string/close_full_view" />
+    </group>
+</menu>
