@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.igenius.androidstories.app.data.StoriesFolder
 import com.igenius.androidstories.app.data.ViewStory
 import androidx.core.view.isVisible
@@ -37,6 +38,14 @@ class StoriesActivity : AppCompatActivity() {
         get() =
             resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ||
                     resources.getBoolean(R.bool.isTablet)
+
+    private var nightMode: Boolean
+        get() = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+                || resources.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        set(value) = AppCompatDelegate.setDefaultNightMode(
+            if(value) AppCompatDelegate.MODE_NIGHT_YES
+            else AppCompatDelegate.MODE_NIGHT_NO
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +97,20 @@ class StoriesActivity : AppCompatActivity() {
             else binding.root.transitionToStart()
 
             detailsFragment?.updateConfiguration(isFullView = it)
+        }
+
+        binding.toolbar.run {
+            inflateMenu(R.menu.stories_activity_menu)
+            setOnMenuItemClickListener {
+                if(it.itemId == R.id.night_mode_item) {
+                    (!it.isChecked).let { newMode ->
+                        nightMode = newMode
+                        it.isChecked = newMode
+                    }
+                }
+                return@setOnMenuItemClickListener false
+            }
+            menu.findItem(R.id.night_mode_item).isChecked  = nightMode
         }
     }
 
