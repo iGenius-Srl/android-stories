@@ -45,7 +45,7 @@ fun example5(
 ): View = inflater.inflate(R.layout.button_secondary_story, container, false)
 
 @Story(
-    title = "Variable story example",
+    title = "Button red blu",
     description = "This is a story with different variants, press on the right to select ones",
     variants = ["Red", "Blue"]
 )

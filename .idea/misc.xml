@@ -3,13 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../.gradle/caches/transforms-3/79b2c83ff7e367618c586e86b0d8debd/transformed/appcompat-1.3.1/res/drawable/abc_btn_borderless_material.xml" value="0.3109375" />
         <entry key="../../Library/Android/sdk/platforms/android-31/data/res/layout/simple_list_item_2.xml" value="0.1" />
+        <entry key="androidstories-app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.3109375" />
+        <entry key="androidstories-app/src/main/res/drawable/ic_baseline_close_fullscreen_16.xml" value="0.3109375" />
         <entry key="androidstories-app/src/main/res/drawable/ic_baseline_dynamic_feed_16.xml" value="0.5921875" />
         <entry key="androidstories-app/src/main/res/drawable/ic_baseline_dynamic_feed_24.xml" value="0.5921875" />
+        <entry key="androidstories-app/src/main/res/drawable/ic_baseline_open_in_full_24.xml" value="0.3109375" />
+        <entry key="androidstories-app/src/main/res/drawable/selected_item_background.xml" value="0.5088541666666667" />
+        <entry key="androidstories-app/src/main/res/layout-land/fragment_list.xml" value="0.30140454426143387" />
         <entry key="androidstories-app/src/main/res/layout/activity_stories.xml" value="0.3234375" />
         <entry key="androidstories-app/src/main/res/layout/fragment_list.xml" value="0.3234375" />
         <entry key="androidstories-app/src/main/res/layout/fragment_story.xml" value="0.49962935507783546" />
-        <entry key="androidstories-app/src/main/res/layout/story_list_item.xml" value="0.35052083333333334" />
+        <entry key="androidstories-app/src/main/res/layout/main_activity_v2.xml" value="0.32848324514991184" />
+        <entry key="androidstories-app/src/main/res/layout/stories_activity.xml" value="0.31302083333333336" />
+        <entry key="androidstories-app/src/main/res/layout/stories_activity_v2.xml" value="0.1" />
+        <entry key="androidstories-app/src/main/res/layout/story_list_item.xml" value="0.640973630831643" />
         <entry key="example-app/src/main/res/layout/activity_main.xml" value="0.5760416666666667" />
         <entry key="example-app/src/main/res/layout/button_secondary_story.xml" value="0.5760416666666667" />
         <entry key="example-app/src/main/res/layout/button_story.xml" value="0.5760416666666667" />
@@ -21,5 +30,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.16243911353155502" />
+      </ProjectState>
+    </option>
   </component>
 </project>

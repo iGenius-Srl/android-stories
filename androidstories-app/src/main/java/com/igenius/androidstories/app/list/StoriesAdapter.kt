@@ -3,8 +3,6 @@ package com.igenius.androidstories.app.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,11 +11,13 @@ import com.igenius.androidstories.app.*
 import com.igenius.androidstories.app.data.StoriesFolder
 import com.igenius.androidstories.app.data.StoryNode
 import com.igenius.androidstories.app.data.ViewStory
+import com.igenius.androidstories.app.databinding.StoryListItemBinding
 
 data class NodeItemModel (
     val node: StoryNode,
     val rootDistance: Int,
-    val isOpen: Boolean
+    val isOpen: Boolean,
+    val selected: Boolean
 )
 
 class StoriesAdapter(
@@ -38,7 +38,9 @@ private class DiffCallback : DiffUtil.ItemCallback<NodeItemModel>() {
         oldItem.node.completePath == newItem.node.completePath
 
     override fun areContentsTheSame(oldItem: NodeItemModel, newItem: NodeItemModel) =
-        oldItem.node == newItem.node && newItem.isOpen == oldItem.isOpen
+        oldItem.node == newItem.node
+                && newItem.isOpen == oldItem.isOpen
+                && newItem.selected == oldItem.selected
 }
 
 class NodeItem(
@@ -47,20 +49,20 @@ class NodeItem(
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.story_list_item, parent, false)
 ) {
-    private val titleText get() = itemView.findViewById<TextView>(R.id.title)
-    private val iconFolder get() = itemView.findViewById<ImageView>(R.id.iconFolder)
-    private val iconStory get() = itemView.findViewById<ImageView>(R.id.iconStory)
+    private val binding by lazy { StoryListItemBinding.bind(itemView) }
 
-    fun bind(model: NodeItemModel) {
-        titleText.text = model.node.title
+    fun bind(model: NodeItemModel) = binding.run {
+        title.text = model.node.title
 
         itemView.run {
             updatePaddingRelative(
-                start = resources.getDimensionPixelSize(R.dimen.item_horizontal_margin)
+                start = resources.getDimensionPixelSize(R.dimen.item_small_margin)
                         + resources.getDimensionPixelSize(R.dimen.folder_distance) * (model.rootDistance - 1)
             )
             setOnClickListener { onSelect(model.node) }
         }
+
+        selectedStatusView.visibility = if(model.selected) View.VISIBLE else View.GONE
 
         when(model.node) {
             is ViewStory -> {

@@ -8,18 +8,34 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.igenius.androidstories.app.R
 import com.igenius.androidstories.app.StoriesApp
+import com.igenius.androidstories.app.StoryFragment
 import com.igenius.androidstories.app.data.StoriesFolder
 import com.igenius.androidstories.app.data.ViewStory
 import com.igenius.androidstories.app.databinding.FragmentListBinding
+import com.igenius.androidstories.app.story.StoryDetailsFragment
 import com.igenius.androidstories.app.story.StoryDetailsViewModel
 import com.igenius.androidstories.app.utils.generateFolderTree
 
 class ListFragment : Fragment() {
 
-
+    private lateinit var binding: FragmentListBinding
     private val viewModel: ListFragmentViewModel by viewModels()
 
+    private val isListDetails get() = binding.storyDetailsPlaceholder?.let { true } ?: false
+
+    private var detailsFragment: StoryDetailsFragment?
+        get() = childFragmentManager.findFragmentByTag("details_fragment") as? StoryDetailsFragment
+        set(value) {
+            if(!isListDetails) return
+            value?.let {
+                childFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.story_details_placeholder, it, "details_fragment")
+                    .commit()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +46,7 @@ class ListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentListBinding.inflate(inflater, container, false)
+        binding = FragmentListBinding.inflate(inflater, container, false)
 
         val adapter = StoriesAdapter {
             when(it) {
@@ -49,7 +65,11 @@ class ListFragment : Fragment() {
 
     private fun onStorySelect(story: ViewStory) {
         val action = ListFragmentDirections.actionListToStory(story.id, story.title)
-        findNavController().navigate(action)
+        if(isListDetails) {
+            detailsFragment = StoryDetailsFragment().also { it.arguments = action.arguments }
+        } else {
+            findNavController().navigate(action)
+        }
     }
 
 }

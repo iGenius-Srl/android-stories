@@ -6,43 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".story.StoryDetailsFragment">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        app:navigationIcon="@drawable/ic_baseline_close_24"
+        app:elevation="4dp"
+        android:id="@+id/toolbar"
+        android:background="?colorPrimary"
+        app:titleTextColor="?colorOnPrimary"
+        app:subtitleTextColor="?colorOnPrimary"
+        app:navigationIconTint="?colorOnPrimary"
         android:layout_width="match_parent"
-        android:elevation="2dp"
-        android:background="?colorPrimaryVariant"
-        tools:background="@color/purple_700"
-        android:layout_height="wrap_content"
-        android:id="@+id/config_bar">
-
-        <Button
-            android:id="@+id/button_variant"
-            tools:text="Selected variant"
-            android:paddingStart="@dimen/item_horizontal_margin"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
-            app:drawableTint="?android:attr/textColorPrimaryInverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
-            android:drawableEnd="@drawable/ic_baseline_dynamic_feed_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:layout_marginStart="@dimen/item_horizontal_margin"
-            android:id="@+id/description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@id/button_variant"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content" />
     <FrameLayout
         android:id="@+id/story_placeholder"
         android:layout_width="match_parent"

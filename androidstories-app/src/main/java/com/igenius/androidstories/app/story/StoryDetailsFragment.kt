@@ -1,44 +1,69 @@
 package com.igenius.androidstories.app.story
 
+import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.PopupMenu
+import androidx.annotation.DrawableRes
+import androidx.core.internal.view.SupportMenuItem.SHOW_AS_ACTION_ALWAYS
+import androidx.core.view.get
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.igenius.androidstories.app.StoriesApp
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
-import com.igenius.androidstories.app.R
-import com.igenius.androidstories.app.StoryFragment
 import java.lang.IllegalStateException
 
+import android.util.TypedValue
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import android.text.style.ForegroundColorSpan
+
+import android.text.SpannableString
+import com.igenius.androidstories.app.*
+import java.io.Serializable
+
+data class StoryDetailsConfiguration(
+    val isFullView: Boolean,
+    val canChangeFullView: Boolean
+): Serializable
+
 class StoryDetailsFragment : Fragment() {
-    private var binding : FragmentStoryBinding? = null
-    private var storyId: Int = 0
+    private var binding: FragmentStoryBinding? = null
+
+    var storyId: Int
+        get() = arguments?.getInt(STORY_ID)
+            ?: throw IllegalStateException("StoryDetailsFragment: No storyId provided")
+        set(value) {
+            arguments = (arguments ?: Bundle()).apply { putInt(STORY_ID, value) }
+        }
+
+    var configuration: StoryDetailsConfiguration
+        get() = (arguments?.getSerializable(CONFIGURATION) as? StoryDetailsConfiguration)
+            ?: throw IllegalStateException("StoryDetailsFragment: configuration not provided")
+        set(value) {
+            arguments = (arguments ?: Bundle()).apply { putSerializable(CONFIGURATION, value) }
+            binding?.let { applyConfiguration(value) }
+        }
+
+    fun updateConfiguration (
+        isFullView: Boolean? = null,
+        canChangeFullView: Boolean? = null
+    ) {
+        val prevConfig = configuration
+        configuration = StoryDetailsConfiguration(
+            isFullView = isFullView ?: prevConfig.isFullView,
+            canChangeFullView = canChangeFullView ?: prevConfig.canChangeFullView,
+        )
+    }
 
     private val viewModel: StoryDetailsViewModel by viewModels()
 
     private var storyFragment: StoryFragment?
-        get() = childFragmentManager.findFragmentByTag("story_fragment") as? StoryFragment
+        get() = childFragmentManager.retrieveFragment("story_fragment")
         set(value) {
-            value?.let {
-                childFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.story_placeholder, it, "story_fragment")
-                    .commit()
-            }
+            childFragmentManager.commitFragment(R.id.story_placeholder, "story_fragment", value)
         }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        storyId = arguments?.let { StoryDetailsFragmentArgs.fromBundle(it) }?.storyId
-            ?: throw IllegalStateException("StoryDetailsFragment: No storyId provided")
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,31 +76,90 @@ class StoryDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val story = (requireContext().applicationContext as StoriesApp).storiesProvider.stories[storyId]
+        val story =
+            (requireContext().applicationContext as StoriesApp).storiesProvider.stories[storyId]
         storyFragment = story.generateFragment()
 
-        binding?.description?.text = story.description ?: "No description"
-
-        binding?.buttonVariant?.apply {
-            val popup = PopupMenu(context, this)
-            popup.setOnMenuItemClickListener { menItem ->
-                viewModel.selectVariant(menItem.title.toString())
+        binding?.toolbar?.run {
+            title = story.title
+            subtitle = story.description
+            setNavigationOnClickListener {
+                (activity as StoriesActivity).closeStory()
+            }
+            val variantSubmenu = menu.addSubMenu(menuOptionText(story.variants[0]))
+            variantSubmenu.item.setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
+            story.variants.forEach { variant -> variantSubmenu?.add(variant) }
+            setOnMenuItemClickListener {
+                if(story.variants.contains(it.title))
+                    viewModel.selectVariant(it.title.toString())
                 return@setOnMenuItemClickListener false
             }
-            story.variants.forEach { variant -> popup.menu.add(variant) }
-            setOnClickListener { popup.show() }
+
+            menu.add("Fullscreen toggle").let {
+                setIcon(it, R.drawable.ic_baseline_open_in_full_16)
+                it.setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
+                it.setOnMenuItemClickListener {
+                    (activity as StoriesActivity).toggleFullView()
+                    return@setOnMenuItemClickListener false
+                }
+            }
         }
 
-        if(viewModel.selectedVariant.value.isNullOrEmpty())
+
+        if (viewModel.selectedVariant.value.isNullOrEmpty())
             viewModel.selectVariant(story.variants[0])
 
         viewModel.selectedVariant.observe(viewLifecycleOwner) {
             it?.let { selectVariant(it) }
         }
+
+        applyConfiguration(configuration)
     }
 
     private fun selectVariant(variant: String) {
-        binding?.buttonVariant?.text = variant
+        binding?.toolbar?.menu?.getItem(0)?.title = menuOptionText(variant)
         storyFragment?.selectVariant(variant)
+    }
+
+    private fun applyConfiguration(configuration: StoryDetailsConfiguration) = binding?.toolbar?.apply {
+        setNavigationIcon(
+            if(configuration.isFullView) R.drawable.ic_baseline_arrow_back_24
+            else R.drawable.ic_baseline_close_24
+        )
+        menu?.get(1)?.let {
+            setIcon(
+                it,
+                if(configuration.isFullView) R.drawable.ic_baseline_close_fullscreen_16
+                else R.drawable.ic_baseline_open_in_full_16
+            )
+            it.isVisible = configuration.canChangeFullView
+        }
+    }
+
+    private val colorOnPrimary by lazy {
+        TypedValue().also {
+            requireContext().theme.resolveAttribute(R.attr.colorOnPrimary, it, true)
+        }.data
+    }
+
+    private fun setIcon(menuItem: MenuItem, @DrawableRes icon: Int) {
+        val drawable = ContextCompat.getDrawable(requireContext(), icon) ?: return
+        menuItem.icon = DrawableCompat.wrap(drawable).apply {
+            setTint(colorOnPrimary)
+            setTintMode(PorterDuff.Mode.SRC_IN)
+        }
+    }
+
+    private fun menuOptionText(text: String) = SpannableString(text).also {
+        it.setSpan(ForegroundColorSpan(colorOnPrimary), 0, it.length, 0)
+    }
+
+    companion object {
+        private const val STORY_ID = "storyId"
+        private const val CONFIGURATION = "configuration"
+        fun getInstance(storyId: Int, configuration: StoryDetailsConfiguration) = StoryDetailsFragment().also {
+            it.configuration = configuration
+            it.storyId = storyId
+        }
     }
 }

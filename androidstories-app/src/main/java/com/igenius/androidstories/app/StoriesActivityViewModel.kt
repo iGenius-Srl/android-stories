@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app.list
+package com.igenius.androidstories.app
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import com.igenius.androidstories.app.data.StoriesFolder
 import com.igenius.androidstories.app.data.StoriesProvider
 import com.igenius.androidstories.app.data.StoryNode
+import com.igenius.androidstories.app.data.ViewStory
+import com.igenius.androidstories.app.list.NodeItemModel
 import com.igenius.androidstories.app.utils.generateFolderTree
 
-class ListFragmentViewModel: ViewModel() {
+class StoriesActivityViewModel: ViewModel() {
 
     private var root: StoriesFolder? = null
         set(value) {
@@ -24,6 +26,26 @@ class ListFragmentViewModel: ViewModel() {
     private val _showingListLiveData = MutableLiveData<List<NodeItemModel>>()
     val showingListLiveData: LiveData<List<NodeItemModel>> = _showingListLiveData
 
+    private val _selectedStoryLiveData = MutableLiveData<ViewStory?>(null)
+    val selectedStoryLiveData: LiveData<ViewStory?> = _selectedStoryLiveData
+
+    fun toggleStory(story: ViewStory?) {
+        _selectedStoryLiveData.value = story.takeIf {
+            it != _selectedStoryLiveData.value
+        }
+        updateList()
+    }
+
+    private val _fullViewLiveData = MutableLiveData(false)
+    val fullViewLiveData: LiveData<Boolean> get() = _fullViewLiveData
+
+    fun toggleFullView() {
+        setFullView(!(_fullViewLiveData.value ?: true))
+    }
+
+    fun setFullView(value: Boolean) {
+        _fullViewLiveData.value = value
+    }
 
     fun fetchRootFolder(provider: StoriesProvider) {
         root?.let { return }
@@ -51,7 +73,7 @@ class ListFragmentViewModel: ViewModel() {
                 node = it,
                 rootDistance = root.distance(it),
                 isOpen = openedFolders.contains(it),
-                selected = false
+                selected = it == selectedStoryLiveData.value
             )
         }.let { _showingListLiveData.value = it }
     }
