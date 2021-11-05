@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.fragment.app.viewModels
+import com.igenius.androidstories.annotations.AsyncVariantProvider
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import java.lang.IllegalStateException
 import com.igenius.androidstories.app.*
+import com.igenius.androidstories.app.data.AsyncFragmentStory
 import com.igenius.androidstories.app.utils.commitFragment
 import com.igenius.androidstories.app.utils.retrieveFragment
 import java.io.Serializable
@@ -73,6 +75,11 @@ class StoryDetailsFragment : Fragment() {
 
         val story =
             (requireContext().applicationContext as StoriesApp).storiesProvider.stories[storyId]
+
+        viewModel.provider ?: run {
+            viewModel.provider = (story as? AsyncFragmentStory<*>)?.dataProvider
+        }
+
         storyFragment = story.generateFragment()
 
         binding?.toolbar?.run {
@@ -107,6 +114,18 @@ class StoryDetailsFragment : Fragment() {
             it?.let { selectVariant(it) }
         }
 
+        viewModel.fetchedVariantData.observe(viewLifecycleOwner) {
+            it?.let {
+                val data = it.second ?: return@let
+                (storyFragment as? AsyncStoryFragment<*>)?.loadVariantData(it.first, data)
+            }
+        }
+
+        viewModel.fetchVariantLoading.observe(viewLifecycleOwner) {
+            binding?.progressIndicator?.visibility = if(it) View.VISIBLE else View.GONE
+            binding?.storyContainer?.visibility = if(!it) View.VISIBLE else View.INVISIBLE
+        }
+
         applyConfiguration(configuration)
     }
 
@@ -117,7 +136,7 @@ class StoryDetailsFragment : Fragment() {
                 it.isChecked = it.title == variant
             }
         }
-        storyFragment?.selectVariant(variant)
+        storyFragment?.variant = variant
     }
 
     private fun applyConfiguration(config: StoryDetailsConfiguration) = binding?.toolbar?.apply {

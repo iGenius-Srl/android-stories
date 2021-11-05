@@ -1,48 +1,36 @@
 package com.igenius.androidstories.exampleapp.stories
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.content.Context
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import com.igenius.androidstories.annotations.AsyncVariant
 import com.igenius.androidstories.annotations.Story
+import com.igenius.androidstories.app.AsyncLayoutStory
+import com.igenius.androidstories.app.AsyncStoryFragment
+import com.igenius.androidstories.app.LayoutStory
 import com.igenius.androidstories.app.StoryFragment
+import com.igenius.androidstories.app.data.AsyncContextVariantProvider
 import com.igenius.androidstories.exampleapp.R
+import kotlinx.coroutines.delay
+
+@Story val layout_story_example = LayoutStory(R.layout.button_story)
 
 @Story(
-    title = "Button/Primary"
+    title = "Button red blu LayoutStory",
+    description = "This is a story with different variants, press on the right to select ones",
+    variants = ["Red", "Blue"]
 )
-fun example1(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-): View = inflater.inflate(R.layout.button_story, container, false)
-
-@Story(
-    title = "Button/Secondary",
-    description = "Example 2 description",
-)
-fun example2(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-): View = inflater.inflate(R.layout.button_secondary_story, container, false)
-
-@Story(
-    title = "Button/Inner/Secondary",
-    description = "Example 4 description"
-)
-fun example4(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-): View = inflater.inflate(R.layout.button_secondary_story, container, false)
-
-@Story(
-    title = "Button/ZetaInner/Secondary",
-    description = "Example 5 description"
-)
-fun example5(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-): View = inflater.inflate(R.layout.button_secondary_story, container, false)
+val story2 = LayoutStory(R.layout.button_story) {
+    findViewById<Button>(R.id.button)?.setBackgroundColor(
+        ContextCompat.getColor(
+            context,
+            when (it) {
+                "Red" -> android.R.color.holo_red_light
+                else -> android.R.color.holo_blue_bright
+            }
+        )
+    )
+}
 
 @Story(
     title = "Button red blu",
@@ -65,3 +53,52 @@ class ExampleFragment: StoryFragment() {
         )
     }
 }
+
+@Story(
+    title = "Async button red blu",
+    description = "This is a story with different variants, press on the right to select ones",
+    variants = ["Red", "Blue"],
+)
+@AsyncVariant(AsyncExampleFragmentProvider::class)
+class AsyncExampleFragment: AsyncStoryFragment<Test>() {
+
+    override fun getLayoutRes() = R.layout.button_story
+
+    override fun onVariantLoaded(variant: String, data: Test) {
+        view?.findViewById<Button>(R.id.button)?.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                when (data.foo) {
+                    "foo" -> android.R.color.holo_red_light
+                    else -> android.R.color.holo_blue_bright
+                }
+            )
+        )
+    }
+}
+
+@Story(
+    description = "This is a story with different variants, press on the right to select ones",
+    variants = ["Red", "Blue"],
+)
+@AsyncVariant(AsyncExampleFragmentProvider::class)
+val async_layout_story = AsyncLayoutStory<Test> (R.layout.button_story) { _, data ->
+    findViewById<Button>(R.id.button)?.setBackgroundColor(
+        ContextCompat.getColor(
+            context,
+            when (data.foo) {
+                "Red" -> android.R.color.holo_red_light
+                else -> android.R.color.holo_blue_bright
+            }
+        )
+    )
+}
+
+class AsyncExampleFragmentProvider: AsyncContextVariantProvider<Test>() {
+    override suspend fun provide(context: Context, variant: String): Test {
+        delay(3000)
+        return Test(variant)
+    }
+}
+
+data class Test (val foo: String)
