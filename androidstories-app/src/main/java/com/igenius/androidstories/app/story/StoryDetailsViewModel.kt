@@ -3,7 +3,7 @@ package com.igenius.androidstories.app.story
 import android.app.Application
 import androidx.lifecycle.*
 import com.igenius.androidstories.annotations.AsyncVariantProvider
-import com.igenius.androidstories.app.data.AsyncContextVariantProvider
+import com.igenius.androidstories.app.models.AsyncContextVariantProvider
 import kotlinx.coroutines.*
 
 class StoryDetailsViewModel(application: Application) : AndroidViewModel(application) {

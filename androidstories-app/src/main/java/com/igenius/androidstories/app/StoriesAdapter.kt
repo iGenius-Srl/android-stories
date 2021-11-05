@@ -7,10 +7,9 @@ import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.igenius.androidstories.app.*
-import com.igenius.androidstories.app.data.StoriesFolder
-import com.igenius.androidstories.app.data.StoryNode
-import com.igenius.androidstories.app.data.ViewStory
+import com.igenius.androidstories.app.models.StoriesFolder
+import com.igenius.androidstories.app.models.StoryNode
+import com.igenius.androidstories.app.models.AndroidStory
 import com.igenius.androidstories.app.databinding.StoryListItemBinding
 
 data class NodeItemModel (
@@ -65,7 +64,7 @@ class NodeItem(
         selectedStatusView.visibility = if(model.selected) View.VISIBLE else View.GONE
 
         when(model.node) {
-            is ViewStory -> {
+            is AndroidStory -> {
                 iconStory.visibility = View.VISIBLE
                 iconFolder.visibility = View.INVISIBLE
             }

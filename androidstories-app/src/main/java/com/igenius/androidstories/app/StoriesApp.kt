@@ -1,7 +1,7 @@
 package com.igenius.androidstories.app
 
 import android.app.Application
-import com.igenius.androidstories.app.data.StoriesProvider
+import com.igenius.androidstories.app.models.StoriesProvider
 
 abstract class StoriesApp: Application() {
 

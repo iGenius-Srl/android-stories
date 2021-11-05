@@ -9,7 +9,7 @@ import com.igenius.androidstories.app.AsyncLayoutStory
 import com.igenius.androidstories.app.AsyncStoryFragment
 import com.igenius.androidstories.app.LayoutStory
 import com.igenius.androidstories.app.StoryFragment
-import com.igenius.androidstories.app.data.AsyncContextVariantProvider
+import com.igenius.androidstories.app.models.AsyncContextVariantProvider
 import com.igenius.androidstories.exampleapp.R
 import kotlinx.coroutines.delay
 

@@ -1,6 +1,6 @@
-package com.igenius.androidstories.app.data
+package com.igenius.androidstories.app.models
 
-import com.igenius.androidstories.app.data.StoryNode.Companion.DIVIDER
+import com.igenius.androidstories.app.models.StoryNode.Companion.DIVIDER
 
 class StoriesFolder(
     override val completePath: String = ROOT_FOLDER

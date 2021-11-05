@@ -1,6 +1,6 @@
 package com.igenius.androidstories.app
 
-import com.igenius.androidstories.app.data.StoriesFolder
+import com.igenius.androidstories.app.models.StoriesFolder
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

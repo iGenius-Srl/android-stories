@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app.data
+package com.igenius.androidstories.app.models
 
 import android.content.Context
 import com.igenius.androidstories.annotations.AsyncVariantProvider
@@ -7,20 +7,20 @@ import com.igenius.androidstories.app.StoryFragment
 import java.lang.IllegalStateException
 
 interface StoriesProvider {
-    val stories: List<FragmentStory>
+    val stories: List<AndroidFragmentStory>
 }
 
-interface ViewStory : StoryNode {
+interface AndroidStory : StoryNode {
     val id: Int
     val description: String?
     val variants: Array<String>
 }
 
-interface FragmentStory: ViewStory {
+interface AndroidFragmentStory: AndroidStory {
     fun generateFragment(): StoryFragment
 }
 
-interface AsyncFragmentStory<T>: FragmentStory {
+interface AndroidAsyncFragmentStory<T>: AndroidFragmentStory {
     override fun generateFragment(): AsyncStoryFragment<T>
     val dataProvider: AsyncVariantProvider<T>
 }

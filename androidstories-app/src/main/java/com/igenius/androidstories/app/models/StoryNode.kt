@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app.data
+package com.igenius.androidstories.app.models
 
 sealed interface StoryNode {
     val completePath: String

@@ -6,8 +6,8 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.igenius.androidstories.app.data.StoriesFolder
-import com.igenius.androidstories.app.data.ViewStory
+import com.igenius.androidstories.app.models.StoriesFolder
+import com.igenius.androidstories.app.models.AndroidStory
 import androidx.core.view.isVisible
 import com.igenius.androidstories.app.databinding.StoriesActivityBinding
 import com.igenius.androidstories.app.story.StoryDetailsConfiguration
@@ -61,7 +61,7 @@ class StoriesActivity : AppCompatActivity() {
 
         val adapter = StoriesAdapter {
             when (it) {
-                is ViewStory -> viewModel.toggleStory(it)
+                is AndroidStory -> viewModel.toggleStory(it)
                 is StoriesFolder -> viewModel.toggleFolder(it)
             }
         }

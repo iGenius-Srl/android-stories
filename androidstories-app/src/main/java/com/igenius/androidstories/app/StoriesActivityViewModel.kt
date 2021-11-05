@@ -3,10 +3,10 @@ package com.igenius.androidstories.app
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.igenius.androidstories.app.data.StoriesFolder
-import com.igenius.androidstories.app.data.StoriesProvider
-import com.igenius.androidstories.app.data.StoryNode
-import com.igenius.androidstories.app.data.ViewStory
+import com.igenius.androidstories.app.models.StoriesFolder
+import com.igenius.androidstories.app.models.StoriesProvider
+import com.igenius.androidstories.app.models.StoryNode
+import com.igenius.androidstories.app.models.AndroidStory
 import com.igenius.androidstories.app.utils.generateFolderTree
 
 class StoriesActivityViewModel: ViewModel() {
@@ -25,10 +25,10 @@ class StoriesActivityViewModel: ViewModel() {
     private val _showingListLiveData = MutableLiveData<List<NodeItemModel>>()
     val showingListLiveData: LiveData<List<NodeItemModel>> = _showingListLiveData
 
-    private val _selectedStoryLiveData = MutableLiveData<ViewStory?>(null)
-    val selectedStoryLiveData: LiveData<ViewStory?> = _selectedStoryLiveData
+    private val _selectedStoryLiveData = MutableLiveData<AndroidStory?>(null)
+    val selectedStoryLiveData: LiveData<AndroidStory?> = _selectedStoryLiveData
 
-    fun toggleStory(story: ViewStory?) {
+    fun toggleStory(story: AndroidStory?) {
         _selectedStoryLiveData.value = story.takeIf {
             it != _selectedStoryLiveData.value
         }

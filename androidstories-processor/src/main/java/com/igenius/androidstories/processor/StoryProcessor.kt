@@ -158,12 +158,12 @@ class StoryProcessor : AbstractProcessor() {
         val providerName = "AppStoriesProvider"
         val file = FileSpec
             .builder(finalPackageName, providerName)
-            .addImport("com.igenius.androidstories.app.data", "FragmentStory", "AsyncFragmentStory")
+            .addImport("com.igenius.androidstories.app.models", "AndroidFragmentStory", "AndroidAsyncFragmentStory")
             .addType(
                 TypeSpec.classBuilder(providerName)
                     .addSuperinterface(
                         ClassName(
-                            "com.igenius.androidstories.app.data",
+                            "com.igenius.androidstories.app.models",
                             "StoriesProvider"
                         )
                     )
@@ -173,8 +173,8 @@ class StoryProcessor : AbstractProcessor() {
                             ClassName("kotlin.collections", "List")
                                 .plusParameter(
                                     ClassName(
-                                        "com.igenius.androidstories.app.data",
-                                        "FragmentStory"
+                                        "com.igenius.androidstories.app.models",
+                                        "AndroidFragmentStory"
                                     )
                                 )
                         )
@@ -204,7 +204,7 @@ class StoryProcessor : AbstractProcessor() {
                 "\"$it\""
             } ?: "null"
 
-        val storyClass = asyncAnnotation?.let { "AsyncFragmentStory<${dataTypeQualifiedName}>" } ?: "FragmentStory"
+        val storyClass = asyncAnnotation?.let { "AndroidAsyncFragmentStory<${dataTypeQualifiedName}>" } ?: "AndroidFragmentStory"
         return """
         object: $storyClass {
             override val id: Int = $id

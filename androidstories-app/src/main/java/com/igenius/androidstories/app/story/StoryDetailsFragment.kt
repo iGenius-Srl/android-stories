@@ -3,17 +3,14 @@ package com.igenius.androidstories.app.story
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.forEach
-import androidx.core.view.get
 import androidx.fragment.app.viewModels
-import com.igenius.androidstories.annotations.AsyncVariantProvider
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import java.lang.IllegalStateException
 import com.igenius.androidstories.app.*
-import com.igenius.androidstories.app.data.AsyncFragmentStory
+import com.igenius.androidstories.app.models.AndroidAsyncFragmentStory
 import com.igenius.androidstories.app.utils.commitFragment
 import com.igenius.androidstories.app.utils.retrieveFragment
 import java.io.Serializable
@@ -77,7 +74,7 @@ class StoryDetailsFragment : Fragment() {
             (requireContext().applicationContext as StoriesApp).storiesProvider.stories[storyId]
 
         viewModel.provider ?: run {
-            viewModel.provider = (story as? AsyncFragmentStory<*>)?.dataProvider
+            viewModel.provider = (story as? AndroidAsyncFragmentStory<*>)?.dataProvider
         }
 
         storyFragment = story.generateFragment()

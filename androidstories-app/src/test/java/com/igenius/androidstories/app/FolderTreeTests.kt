@@ -1,9 +1,8 @@
 package com.igenius.androidstories.app
 
-import com.igenius.androidstories.app.data.StoriesFolder
-import com.igenius.androidstories.app.data.StoryNode
-import com.igenius.androidstories.app.data.TestStory
-import com.igenius.androidstories.app.data.ViewStory
+import com.igenius.androidstories.app.models.StoriesFolder
+import com.igenius.androidstories.app.models.StoryNode
+import com.igenius.androidstories.app.models.TestStory
 import com.igenius.androidstories.app.utils.generateFolderTree
 import org.junit.Test
 
