@@ -1,28 +1,18 @@
 package com.igenius.androidstories.processor
 
 import com.google.auto.service.AutoService
-import com.igenius.androidstories.annotations.AsyncVariant
 import com.igenius.androidstories.annotations.Story
+import com.igenius.androidstories.processor.models.AnnotatedStory
+import com.igenius.androidstories.processor.specs.AndroidStorySpec
+import com.igenius.androidstories.processor.specs.StoriesProviderSpec
+import com.igenius.androidstories.processor.specs.StoryFragmentSpec
 import com.squareup.kotlinpoet.*
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.plusParameter
 import java.io.File
-import java.lang.Exception
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.MirroredTypeException
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Types
-import kotlin.reflect.KClass
-
-const val STORY_FRAGMENT_QUALIFIED_NAME = "com.igenius.androidstories.app.StoryFragment"
-const val ASYNC_STORY_FRAGMENT_QUALIFIED_NAME = "com.igenius.androidstories.app.AsyncStoryFragment"
-const val ASYNC_STORY_LAYOUT_QUALIFIED_NAME = "com.igenius.androidstories.app.AsyncLayoutStory"
 
 @SupportedAnnotationTypes("com.igenius.androidstories.annotations.Story")
 @SupportedOptions(StoryProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
@@ -30,258 +20,57 @@ const val ASYNC_STORY_LAYOUT_QUALIFIED_NAME = "com.igenius.androidstories.app.As
 @AutoService(Processor::class)
 class StoryProcessor : AbstractProcessor() {
 
-    private val storyFragmentType by lazy { processingEnv.elementUtils.getTypeElement(STORY_FRAGMENT_QUALIFIED_NAME) }
-    private val asyncStoryFragmentType by lazy { processingEnv.elementUtils.getTypeElement(ASYNC_STORY_FRAGMENT_QUALIFIED_NAME) }
-
     override fun process(set: Set<TypeElement?>?, roundEnvironment: RoundEnvironment?): Boolean {
-        val generatedSourcesRoot =
-            File(processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME].orEmpty())
+        val generatedSourcesRoot = File(processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME].orEmpty())
+
         val elements = roundEnvironment?.getElementsAnnotatedWith(Story::class.java)
 
         val generatedElement = elements?.mapNotNull {
             when (it.kind) {
-                ElementKind.CLASS -> {
-                    if(processingEnv.typeUtils.isSubtype(it.asType(), storyFragmentType.asType()))
-                        AnnotatedStory(processingEnv, it)
-                    else throw IllegalArgumentException("@Story annotated classes have to be subtypes of ${storyFragmentType.qualifiedName}")
-                }
+                ElementKind.CLASS -> AnnotatedStory(processingEnv, it)
                 ElementKind.FIELD -> createFragmentFromLayoutStory(it, generatedSourcesRoot)
                 else -> null
             }
         }
+
         if (roundEnvironment?.processingOver() != true)
             generatedElement?.let { generateProvider(generatedSourcesRoot, it) }
 
         return false
     }
 
-    private fun createFragmentFromLayoutStory(element: Element, sourceRoot: File): AnnotatedStory {
-        val simpleName = element.simpleName.toString()
-        val fragmentClassName =
-            "${simpleName.replaceFirstChar { it.uppercase() }}StoryFragment"
-
-        val annotatedStory = AnnotatedStory(processingEnv, element, fragmentClassName)
-        val superType = annotatedStory.asyncAnnotation?.let {
-            asyncStoryFragmentType.asClassName()
-                .parameterizedBy(processingEnv.elementUtils.getTypeElement(annotatedStory.dataTypeQualifiedName).asClassName())
-        } ?: storyFragmentType.asClassName()
-
-        val function = annotatedStory.asyncAnnotation?.let {
-            FunSpec.builder("onVariantLoaded")
-                .addModifiers(KModifier.OVERRIDE)
-                .addParameter(
-                    ParameterSpec(
-                        "variant",
-                        ClassName("kotlin", "String")
-                    )
-                )
-                .addParameter(
-                    ParameterSpec(
-                        "data",
-                        processingEnv.elementUtils.getTypeElement(annotatedStory.dataTypeQualifiedName).asClassName()
-                    ),
-                )
-                .addStatement(
-                    "view?.let { ${annotatedStory.sourceQualifiedName}.onVariantLoaded.invoke(it, variant, data) }"
-                ).build()
-        } ?: FunSpec.builder("onVariantSelected")
-                .addModifiers(KModifier.OVERRIDE)
-                .addParameter(
-                    ParameterSpec(
-                        "variant",
-                        ClassName("kotlin", "String")
-                    )
-                )
-                .addStatement(
-                    "view?.let { ${annotatedStory.sourceQualifiedName}.onVariantSelected.invoke(it, variant) }"
-                ).build()
-
-        val file = FileSpec.builder(annotatedStory.packageName, fragmentClassName)
-            .addComment("Autogenerated StoryFragment to expose ${annotatedStory.packageName}.${element.simpleName}")
-            .addType(
-                TypeSpec
-                    .classBuilder(fragmentClassName)
-                    .superclass(superType)
-                    .addFunction(
-                        FunSpec.builder("onCreateView")
-                            .addModifiers(KModifier.OVERRIDE)
-                            .addParameter(
-                                ParameterSpec(
-                                    "inflater",
-                                    ClassName("android.view", "LayoutInflater")
-                                )
-                            )
-                            .addParameter(
-                                ParameterSpec(
-                                    "container",
-                                    ClassName("android.view", "ViewGroup")
-                                        .copy(nullable = true)
-                                )
-                            )
-                            .addParameter(
-                                ParameterSpec(
-                                    "savedInstanceState",
-                                    ClassName("android.os", "Bundle")
-                                        .copy(nullable = true)
-                                )
-                            )
-                            .returns(ClassName("android.view", "View"))
-                            .addStatement(
-                                "return inflater.inflate(${annotatedStory.sourceQualifiedName}.layoutId, container, false)"
-                            ).build()
-                    )
-                    .addFunction(function).build()
-            ).build()
-
-        file.writeTo(sourceRoot)
-
-        return annotatedStory
-    }
+    private fun createFragmentFromLayoutStory(element: Element, sourceRoot: File) =
+        StoryFragmentSpec(element, processingEnv).let {
+            it.writeTo(sourceRoot)
+            it.annotatedStory
+        }
 
     private fun generateProvider(
         generatedSourcesRoot: File,
         stories: List<AnnotatedStory>
-    ) {
-        var packageName: String? = null
-        stories.forEach { element ->
-            packageName?.let {
-                packageName = it.commonPrefixWith(element.packageName)
-            } ?: run {
-                packageName = element.packageName
-            }
+    ) = StoriesProviderSpec(
+        stories.map {
+            it.packageName to generateFragmentStory(it, stories.indexOf(it))
         }
+    ).writeTo(generatedSourcesRoot)
 
-        val finalPackageName = checkNotNull(packageName) {
-            "no common package name"
-        }
+    private fun generateFragmentStory(story: AnnotatedStory, id: Int): AndroidStorySpec = story.run {
 
-        val providerName = "AppStoriesProvider"
-        val file = FileSpec
-            .builder(finalPackageName, providerName)
-            .addImport("com.igenius.androidstories.app.models", "AndroidFragmentStory", "AndroidAsyncFragmentStory")
-            .addType(
-                TypeSpec.classBuilder(providerName)
-                    .addSuperinterface(
-                        ClassName(
-                            "com.igenius.androidstories.app.models",
-                            "StoriesProvider"
-                        )
-                    )
-                    .addProperty(
-                        PropertySpec.builder(
-                            "stories",
-                            ClassName("kotlin.collections", "List")
-                                .plusParameter(
-                                    ClassName(
-                                        "com.igenius.androidstories.app.models",
-                                        "AndroidFragmentStory"
-                                    )
-                                )
-                        )
-                            .addModifiers(KModifier.OVERRIDE)
-                            .getter(FunSpec.getterBuilder().addStatement(
-                                """return listOf(${
-                                    stories.joinToString(",") {
-                                        generateFragmentStory(it, stories.indexOf(it)).toString()
-                                    }
-                                })""".trimIndent()
-                            ).build()
-                            )
-                            .build()
-                    )
-                    .build()
-            )
-            .build()
-
-        file.writeTo(generatedSourcesRoot)
-    }
-
-    private fun generateFragmentStory(story: AnnotatedStory, id: Int): String = story.run {
         val title = annotation.title.takeIf { it.isNotEmpty() }
             ?: sourceSimpleName.split("_").joinToString(" ")
-        val description =
-            annotation.description.takeIf { it.isNotEmpty() }?.let {
-                "\"$it\""
-            } ?: "null"
 
-        val storyClass = asyncAnnotation?.let { "AndroidAsyncFragmentStory<${dataTypeQualifiedName}>" } ?: "AndroidFragmentStory"
-        return """
-        object: $storyClass {
-            override val id: Int = $id
-            override val completePath = "$title"
-            override val description: String? =
-$description
-            override val variants = arrayOf(${annotation.variants.joinToString(",") { "\"$it\"" }})
-            override fun generateFragment() = $qualifiedName()
-            ${asyncAnnotation?.dataProviderQualifiedName?.let {
-                "override val dataProvider = $it() "
-            } ?: ""}
-        }"""
+        return AndroidStorySpec(
+            id = id,
+            completePath = title,
+            description = annotation.description,
+            asyncDataType = dataType,
+            variants = annotation.variants,
+            generateFragment = fragmentClassName,
+            dataProvider = asyncAnnotation?.dataProviderQualifiedName?.let { ClassName.bestGuess (it) }
+        )
     }
 
     companion object {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-    }
-}
-
-data class AnnotatedStory(
-    val annotation: Story,
-    val asyncAnnotation: AsyncVariant?,
-    val packageName: String,
-    val simpleName: String,
-    val sourceSimpleName: String,
-    val dataTypeQualifiedName: String?
-) {
-    val qualifiedName = "$packageName.$simpleName"
-
-    val sourceQualifiedName = "$packageName.$sourceSimpleName"
-
-    constructor(
-        processingEnv: ProcessingEnvironment,
-        element: Element,
-        simpleName: String? = null
-    ) : this(
-        annotation = element.getAnnotation(Story::class.java),
-        asyncAnnotation = element.getAnnotation(AsyncVariant::class.java),
-        packageName = processingEnv.elementUtils.getPackageOf(element).qualifiedName.toString(),
-        simpleName = simpleName ?: element.simpleName.toString(),
-        sourceSimpleName = element.simpleName.toString(),
-        dataTypeQualifiedName = processingEnv.getDataType(element)
-    )
-}
-
-val AsyncVariant.dataProviderQualifiedName: String? get() = try {
-    dataProvider.qualifiedName
-} catch( exception: MirroredTypeException) {
-    exception.typeMirror.toString()
-}
-
-fun Types.getSupertypes(type: TypeMirror): List<TypeMirror> {
-    val result = mutableListOf(type)
-    directSupertypes(type).forEach {
-        result.addAll(getSupertypes(it))
-    }
-    return result.toList().distinct()
-}
-
-private fun ProcessingEnvironment.getDataType (element: Element): String? {
-    val dataType = typeUtils
-        .getSupertypes(element.asType())
-        .map { it.asTypeName()}
-        .filterIsInstance<ParameterizedTypeName>()
-        .find {
-            it.toString().startsWith("$ASYNC_STORY_FRAGMENT_QUALIFIED_NAME<")
-                    || it.toString().startsWith("$ASYNC_STORY_LAYOUT_QUALIFIED_NAME<")
-        }
-        ?.typeArguments
-        ?.first()
-        ?.let { elementUtils.getTypeElement(it.toString()) }
-        ?.asType()
-
-    return try {
-        typeUtils.unboxedType(dataType)
-            .toString().replaceFirstChar { it.uppercase() }
-    } catch (e: Exception) {
-        dataType.toString().removePrefix("java.lang.")
     }
 }

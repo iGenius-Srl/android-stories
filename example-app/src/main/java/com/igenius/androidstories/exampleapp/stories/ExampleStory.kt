@@ -69,7 +69,7 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
             ContextCompat.getColor(
                 requireContext(),
                 when (data.foo) {
-                    "foo" -> android.R.color.holo_red_light
+                    "Red" -> android.R.color.holo_red_light
                     else -> android.R.color.holo_blue_bright
                 }
             )
