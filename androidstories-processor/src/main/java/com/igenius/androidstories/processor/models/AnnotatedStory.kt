@@ -2,7 +2,7 @@ package com.igenius.androidstories.processor.models
 
 import com.igenius.androidstories.annotations.AsyncVariant
 import com.igenius.androidstories.annotations.Story
-import com.igenius.androidstories.processor.getAsyncStoryDataType
+import com.igenius.androidstories.processor.*
 import com.squareup.kotlinpoet.ClassName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
@@ -27,6 +27,6 @@ data class AnnotatedStory(
         packageName = processingEnv.elementUtils.getPackageOf(element).qualifiedName.toString(),
         simpleName = simpleName ?: element.simpleName.toString(),
         sourceSimpleName = element.simpleName.toString(),
-        dataType = processingEnv.getAsyncStoryDataType(element)
+        dataType = processingEnv.getGenericTypesForParent(element, ASYNC_STORY_FRAGMENT, ASYNC_STORY_LAYOUT).firstOrNull()
     )
 }

@@ -26,26 +26,24 @@ fun Types.getSupertypes(type: TypeMirror): List<TypeMirror> {
     return result.toList().distinct()
 }
 
-fun ProcessingEnvironment.getAsyncStoryDataType (element: Element): ClassName? {
-    val dataType = typeUtils
+fun ProcessingEnvironment.getGenericTypesForParent(element: Element, vararg parents: ClassName) =
+    typeUtils
         .getSupertypes(element.asType())
+        .asSequence()
         .map { it.asTypeName()}
         .filterIsInstance<ParameterizedTypeName>()
-        .find {
-            it.rawType == ASYNC_STORY_FRAGMENT
-                    || it.rawType == ASYNC_STORY_LAYOUT
+        .filter { parents.contains(it.rawType) }
+        .map { it.typeArguments }
+        .flatten()
+        .map { elementUtils.getTypeElement(it.toString()).asType() }
+        .map {
+            val type = try {
+                typeUtils.unboxedType(it)
+                    .toString()
+                    .replaceFirstChar { char -> char.uppercase() }
+            } catch (e: Exception) {
+                it.toString().removePrefix("java.lang.")
+            }
+            ClassName.bestGuess(type)
         }
-        ?.typeArguments
-        ?.first()
-        ?.let { elementUtils.getTypeElement(it.toString()) }
-        ?.asType()
-
-    val completeName = try {
-        typeUtils.unboxedType(dataType)
-            .toString().replaceFirstChar { it.uppercase() }
-    } catch (e: Exception) {
-        dataType?.toString()?.removePrefix("java.lang.")
-    }
-
-    return completeName?.let { elementUtils.getTypeElement(it)?.asClassName() }
-}
+        .toList()

@@ -3,9 +3,7 @@ package com.igenius.androidstories.processor
 import com.google.auto.service.AutoService
 import com.igenius.androidstories.annotations.Story
 import com.igenius.androidstories.processor.models.AnnotatedStory
-import com.igenius.androidstories.processor.specs.AndroidStorySpec
-import com.igenius.androidstories.processor.specs.StoriesProviderSpec
-import com.igenius.androidstories.processor.specs.StoryFragmentSpec
+import com.igenius.androidstories.processor.specs.*
 import com.squareup.kotlinpoet.*
 import java.io.File
 import javax.annotation.processing.*
@@ -25,6 +23,10 @@ class StoryProcessor : AbstractProcessor() {
 
         val elements = roundEnvironment?.getElementsAnnotatedWith(Story::class.java)
 
+        elements?.forEach {
+            if(!processingEnv.isValidStory(it)) return@process false
+        }
+
         val generatedElement = elements?.mapNotNull {
             when (it.kind) {
                 ElementKind.CLASS -> AnnotatedStory(processingEnv, it)
@@ -32,6 +34,7 @@ class StoryProcessor : AbstractProcessor() {
                 else -> null
             }
         }
+
 
         if (roundEnvironment?.processingOver() != true)
             generatedElement?.let { generateProvider(generatedSourcesRoot, it) }
