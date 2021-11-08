@@ -55,7 +55,7 @@ class ExampleFragment: StoryFragment() {
 }
 
 @Story(
-    title = "Async button red blu",
+    title = "Async/button red blu",
     description = "This is a story with different variants, press on the right to select ones",
     variants = ["Red", "Blue"],
 )
@@ -78,6 +78,7 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
 }
 
 @Story(
+    title = "Async/layout story",
     description = "This is a story with different variants, press on the right to select ones",
     variants = ["Red", "Blue"],
 )

@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.view.forEach
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import java.lang.IllegalStateException
@@ -119,8 +121,7 @@ class StoryDetailsFragment : Fragment() {
         }
 
         viewModel.fetchVariantLoading.observe(viewLifecycleOwner) {
-            binding?.progressIndicator?.visibility = if(it) View.VISIBLE else View.GONE
-            binding?.storyContainer?.visibility = if(!it) View.VISIBLE else View.INVISIBLE
+            loadingLayout = it
         }
 
         applyConfiguration(configuration)
@@ -144,6 +145,18 @@ class StoryDetailsFragment : Fragment() {
         menu.findItem(R.id.fullView_item).isVisible = config.canChangeFullView && !config.isFullView
         menu.findItem(R.id.closeFullView_item).isVisible = config.canChangeFullView && config.isFullView
     }
+
+    private val fadeIn by lazy { AnimationUtils.loadAnimation(requireContext(), android.R.anim.fade_in) }
+    private val fadeOut by lazy { AnimationUtils.loadAnimation(requireContext(), android.R.anim.fade_out) }
+
+    private var loadingLayout = false
+        set(value) = binding?.run {
+            field = value
+            progressIndicator.isVisible = value
+            storyContainer.isVisible = !value
+            progressIndicator.startAnimation(if(value) fadeIn else fadeOut)
+            storyContainer.startAnimation(if(!value) fadeIn else fadeOut)
+        } ?: Unit
 
     companion object {
         private const val STORY_ID = "storyId"

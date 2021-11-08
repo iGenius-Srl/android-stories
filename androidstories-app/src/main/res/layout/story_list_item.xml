@@ -61,6 +61,20 @@
         tools:text="Story title" />
 
     <TextView
+        android:id="@+id/selected_title"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="?colorPrimary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/item_small_margin"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iconFolder"
+        app:layout_constraintTop_toTopOf="@+id/iconFolder"
+        app:layout_constraintBottom_toBottomOf="@+id/iconFolder"
+        tools:text="Selected story title" />
+
+    <TextView
         android:id="@+id/subtitle"
         android:visibility="gone"
         style="@style/TextAppearance.MaterialComponents.Body2"

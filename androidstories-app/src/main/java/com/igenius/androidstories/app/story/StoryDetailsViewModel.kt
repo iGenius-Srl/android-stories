@@ -46,7 +46,15 @@ class StoryDetailsViewModel(application: Application) : AndroidViewModel(applica
 
     private suspend fun fetchData(variant: String) = when(provider) {
         is AsyncContextVariantProvider<*> ->
-            (provider as AsyncContextVariantProvider<*>).provide(getApplication(), variant)
-        else -> provider?.provide(variant)
+            (provider as AsyncContextVariantProvider<*>).fetchData(getApplication(), variant)
+        else -> provider?.fetchData(variant)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        providerJob?.cancel()
+        provider
+            ?.takeIf { it.cacheLifeTime == AsyncVariantProvider.CacheLifeTime.VIEW_MODEL }
+            ?.clearCache()
     }
 }

@@ -43,7 +43,7 @@ class AndroidStorySpec(
         // dataProvider
         dataProvider?.let {
             PropertySpec.builder("dataProvider", it, KModifier.OVERRIDE)
-                .getter(FunSpec.getterBuilder().addStatement("return %L()", it.simpleName).build())
+                .initializer("%L()", it.simpleName)
         }
     )
 

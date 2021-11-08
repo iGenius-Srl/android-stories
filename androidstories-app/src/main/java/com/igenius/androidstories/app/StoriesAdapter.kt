@@ -3,6 +3,7 @@ package com.igenius.androidstories.app
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.view.updatePaddingRelative
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -51,7 +52,10 @@ class NodeItem(
     private val binding by lazy { StoryListItemBinding.bind(itemView) }
 
     fun bind(model: NodeItemModel) = binding.run {
-        title.text = model.node.title
+        model.node.title.let {
+            title.text = it
+            selectedTitle.text = it
+        }
 
         itemView.run {
             updatePaddingRelative(
@@ -61,7 +65,11 @@ class NodeItem(
             setOnClickListener { onSelect(model.node) }
         }
 
-        selectedStatusView.visibility = if(model.selected) View.VISIBLE else View.GONE
+        model.selected.let {
+            selectedStatusView.isVisible = it
+            selectedTitle.isVisible = it
+            title.isVisible = !it
+        }
 
         when(model.node) {
             is AndroidStory -> {

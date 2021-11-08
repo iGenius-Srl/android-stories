@@ -25,9 +25,23 @@ interface AndroidAsyncFragmentStory<T>: AndroidFragmentStory {
     val dataProvider: AsyncVariantProvider<T>
 }
 
-abstract class AsyncContextVariantProvider<T>: AsyncVariantProvider<T> {
+abstract class AsyncContextVariantProvider<T>(
+    cacheLifeTime: CacheLifeTime = CacheLifeTime.VIEW_MODEL
+): AsyncVariantProvider<T>(cacheLifeTime) {
+
+    suspend fun fetchData(context: Context, variant: String): T {
+        cached(variant)?.let { return@fetchData it }
+
+        return provide(context, variant).also { cache(variant, it) }
+    }
+
+    abstract suspend fun provide(context: Context, variant: String): T
+
+    final override suspend fun fetchData(variant: String): T {
+        throw IllegalStateException("please use the fetchData method with context")
+    }
+
     final override suspend fun provide(variant: String): T {
         throw IllegalStateException("please use the provide method with context")
     }
-    abstract suspend fun provide(context: Context, variant: String): T
 }
