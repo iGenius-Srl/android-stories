@@ -21,7 +21,8 @@ class AndroidStorySpec(
         ANDROID_ASYNC_FRAGMENT_STORY_MODEL.parameterizedBy(it)
     } ?: ANDROID_FRAGMENT_STORY_MODEL
 
-    private val variantsType = Array::class.asClassName().parameterizedBy(String::class.asClassName())
+    private val variantsType = Array::class.asClassName()
+        .parameterizedBy(String::class.asClassName())
 
     private val properties = mutableListOf(
         // id
@@ -54,14 +55,13 @@ class AndroidStorySpec(
             .addModifiers(KModifier.OVERRIDE)
             .returns(generateFragment)
             .addStatement("return %L()", generateFragment.simpleName)
-            .build()
     )
 
     private val typeSpec = TypeSpec
         .objectBuilder(name)
         .addSuperinterface(type)
         .addProperties(properties.mapNotNull { it?.build() })
-        .addFunctions(functions)
+        .addFunctions(functions.map { it.build() })
 
     fun build() = typeSpec.build()
 }

@@ -1,8 +1,13 @@
 package com.igenius.androidstories.exampleapp.stories
 
 import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.igenius.androidstories.annotations.AsyncVariant
 import com.igenius.androidstories.annotations.Story
 import com.igenius.androidstories.app.AsyncLayoutStory
@@ -20,16 +25,25 @@ import kotlinx.coroutines.delay
     description = "This is a story with different variants, press on the right to select ones",
     variants = ["Red", "Blue"]
 )
-val story2 = LayoutStory(R.layout.button_story) {
+val story2 = LayoutStory(R.layout.button_story) { variant ->
     findViewById<Button>(R.id.button)?.setBackgroundColor(
         ContextCompat.getColor(
             context,
-            when (it) {
+            when (variant) {
                 "Red" -> android.R.color.holo_red_light
                 else -> android.R.color.holo_blue_bright
             }
         )
     )
+}
+
+@Story
+class NativeFragment: Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.button_story, container, false)
 }
 
 @Story(
@@ -83,7 +97,7 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
     variants = ["Red", "Blue"],
 )
 @AsyncVariant(AsyncExampleFragmentProvider::class)
-val async_layout_story = AsyncLayoutStory<Test> (R.layout.button_story) { _, data ->
+val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { _, data ->
     findViewById<Button>(R.id.button)?.setBackgroundColor(
         ContextCompat.getColor(
             context,

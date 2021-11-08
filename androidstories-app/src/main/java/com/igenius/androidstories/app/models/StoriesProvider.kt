@@ -1,6 +1,7 @@
 package com.igenius.androidstories.app.models
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.igenius.androidstories.annotations.AsyncVariantProvider
 import com.igenius.androidstories.app.AsyncStoryFragment
 import com.igenius.androidstories.app.StoryFragment
@@ -17,7 +18,7 @@ interface AndroidStory : StoryNode {
 }
 
 interface AndroidFragmentStory: AndroidStory {
-    fun generateFragment(): StoryFragment
+    fun generateFragment(): Fragment
 }
 
 interface AndroidAsyncFragmentStory<T>: AndroidFragmentStory {

@@ -15,22 +15,23 @@ fun ProcessingEnvironment.isValidStory(story: Element): Boolean =
 
 private fun ProcessingEnvironment.checkStoryType(story: Element): Boolean {
 
-    val expectedStoryClasses =
-        if (story.kind == ElementKind.CLASS) listOf(STORY_FRAGMENT)
-        else listOf(STORY_LAYOUT, ASYNC_STORY_LAYOUT)
+    val isAsync = story.getAnnotation(AsyncVariant::class.java)?.let { true } ?: false
 
-    val acceptedNames = expectedStoryClasses.map { it.canonicalName }
+    val expectedStoryClass = when(story.kind) {
+        ElementKind.CLASS -> if(isAsync) ASYNC_STORY_FRAGMENT else GENERIC_FRAGMENT
+        else -> if(isAsync) ASYNC_STORY_LAYOUT else STORY_LAYOUT
+    }.canonicalName
 
     typeUtils
         .getSupertypes(story.asType())
         .map { it.asTypeName() }
         .map { if (it is ParameterizedTypeName) it.rawType.canonicalName else it.toString() }
-        .find { acceptedNames.contains(it) }
+        .find { expectedStoryClass == it }
         ?.let { return@checkStoryType true }
 
     messager.printMessage(
         Diagnostic.Kind.ERROR,
-        "${story.simpleName} should extend ${acceptedNames.joinToString(" or ")}",
+        "${story.simpleName} should extend $expectedStoryClass",
         story
     )
 

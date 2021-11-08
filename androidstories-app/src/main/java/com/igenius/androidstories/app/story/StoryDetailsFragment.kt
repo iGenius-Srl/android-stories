@@ -55,7 +55,7 @@ class StoryDetailsFragment : Fragment() {
 
     private val viewModel: StoryDetailsViewModel by viewModels()
 
-    private var storyFragment: StoryFragment?
+    private var storyFragment: Fragment?
         get() = childFragmentManager.retrieveFragment(STORY_FRAGMENT_TAG)
         set(value) {
             childFragmentManager.commitFragment(R.id.story_placeholder, STORY_FRAGMENT_TAG, value)
@@ -134,7 +134,7 @@ class StoryDetailsFragment : Fragment() {
                 it.isChecked = it.title == variant
             }
         }
-        storyFragment?.variant = variant
+        (storyFragment as? StoryFragment)?.variant = variant
     }
 
     private fun applyConfiguration(config: StoryDetailsConfiguration) = binding?.toolbar?.apply {
