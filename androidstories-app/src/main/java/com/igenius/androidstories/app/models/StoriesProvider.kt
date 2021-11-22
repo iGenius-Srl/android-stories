@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import com.igenius.androidstories.annotations.AsyncVariantProvider
 import com.igenius.androidstories.app.AsyncStoryFragment
-import com.igenius.androidstories.app.StoryFragment
 import java.lang.IllegalStateException
 
 interface StoriesProvider {

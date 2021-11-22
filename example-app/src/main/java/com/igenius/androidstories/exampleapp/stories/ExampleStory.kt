@@ -109,6 +109,27 @@ val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { _, data
     )
 }
 
+@Story(
+    title = "Async/layout story without loader",
+    description = "This is a story without a loader",
+    variants = ["Red", "Blue"],
+)
+@AsyncVariant(AsyncExampleFragmentProvider::class)
+val async_layout_story_without_loader = AsyncLayoutStory<Test>(
+    R.layout.button_story,
+    preventUiLoader = true
+) { _, data ->
+    findViewById<Button>(R.id.button)?.setBackgroundColor(
+        ContextCompat.getColor(
+            context,
+            when (data.foo) {
+                "Red" -> android.R.color.holo_red_light
+                else -> android.R.color.holo_blue_bright
+            }
+        )
+    )
+}
+
 class AsyncExampleFragmentProvider: AsyncContextVariantProvider<Test>() {
     override suspend fun provide(context: Context, variant: String): Test {
         delay(3000)

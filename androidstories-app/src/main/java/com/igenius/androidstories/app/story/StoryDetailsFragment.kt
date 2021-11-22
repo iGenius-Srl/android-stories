@@ -121,7 +121,7 @@ class StoryDetailsFragment : Fragment() {
         }
 
         viewModel.fetchVariantLoading.observe(viewLifecycleOwner) {
-            loadingLayout = it
+            loadingLayout = ((storyFragment as? AsyncStoryFragment<*>)?.preventUiLoader == false) && it
         }
 
         applyConfiguration(configuration)

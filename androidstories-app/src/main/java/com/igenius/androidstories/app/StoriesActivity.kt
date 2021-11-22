@@ -52,10 +52,8 @@ class StoriesActivity : AppCompatActivity() {
         binding = StoriesActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        (application as StoriesApp).let {
-            binding.toolbar.title = it.appName
-            viewModel.fetchRootFolder(it.storiesProvider)
-        }
+        viewModel.fetchRootFolder((application as StoriesApp).storiesProvider)
+        binding.toolbar.title = appName
 
         supportActionBar?.hide()
 
@@ -131,4 +129,9 @@ class StoriesActivity : AppCompatActivity() {
 
     fun closeStory() = viewModel.toggleStory(null)
     fun setFullView(fullView: Boolean) = viewModel.setFullView(fullView)
+
+    private val appName get() = applicationInfo.labelRes
+            .takeIf { it != 0 }
+            ?.let { getString(it) }
+            ?: applicationInfo.nonLocalizedLabel.toString()
 }

@@ -38,7 +38,9 @@ open class StoryFragment : Fragment() {
 
 abstract class AsyncStoryFragment<T> : StoryFragment() {
 
-    final override fun onVariantSelected(variant: String) {}
+    open val preventUiLoader = false
+
+    override fun onVariantSelected(variant: String) {}
 
     fun loadVariantData(variant: String, data: Any) {
         (data as? T)?.let { onVariantLoaded(variant, it) }
@@ -54,5 +56,6 @@ data class LayoutStory(
 
 data class AsyncLayoutStory<T>(
     val layoutId: Int,
+    val preventUiLoader: Boolean = false,
     val onVariantLoaded: View.(variant: String, data: T) -> Unit = { _, _ -> }
 )

@@ -22,6 +22,14 @@ class StoryFragmentSpec(
         ASYNC_STORY_FRAGMENT.parameterizedBy(it)
     } ?: STORY_FRAGMENT
 
+    private val properties: List<PropertySpec> = listOfNotNull(
+        annotatedStory.dataType?.let {
+            PropertySpec.builder("preventUiLoader", Boolean::class.asClassName(), KModifier.OVERRIDE)
+                .initializer("%L.preventUiLoader", layoutStoryElement.simpleName)
+                .build()
+        }
+    )
+
     private val variantFunSpec = annotatedStory.dataType?.let {
         FunSpec.builder("onVariantLoaded")
             .addModifiers(KModifier.OVERRIDE)
@@ -42,6 +50,7 @@ class StoryFragmentSpec(
     private val typeSpec = TypeSpec
         .classBuilder(name)
         .superclass(superType)
+        .addProperties(properties)
         .addFunction(
             FunSpec.builder("onCreateView")
                 .addModifiers(KModifier.OVERRIDE)
