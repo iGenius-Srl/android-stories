@@ -3,7 +3,7 @@ package com.igenius.androidstories.app.models
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.igenius.androidstories.annotations.AsyncVariantProvider
-import com.igenius.androidstories.app.AsyncStoryFragment
+import com.igenius.androidstories.app.story.AsyncStoryFragment
 
 /**
  * Interface used by the processor to provide stories to the stories-app
@@ -54,7 +54,8 @@ interface AndroidAsyncFragmentStory<T> : AndroidFragmentStory {
 /**
  * Class that defines a provider of data that receives the current android.content.Context
  * @param <T> Type of the provided data
- * @param cacheLifeTime is the life time specification of fetched data (@CacheLifeTime enum)
+ * @param cacheLifeTime is the life time specification of fetched data
+ * (see {@link com.igenius.androidstories.annotations.AsyncVariantProvider.CacheLifeTime} enum)
  */
 abstract class AsyncContextVariantProvider<T>(
     cacheLifeTime: CacheLifeTime = CacheLifeTime.VIEW_MODEL

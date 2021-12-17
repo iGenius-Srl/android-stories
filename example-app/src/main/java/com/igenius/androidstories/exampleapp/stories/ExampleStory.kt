@@ -10,16 +10,24 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.igenius.androidstories.annotations.AsyncVariant
 import com.igenius.androidstories.annotations.Story
-import com.igenius.androidstories.app.AsyncLayoutStory
-import com.igenius.androidstories.app.AsyncStoryFragment
-import com.igenius.androidstories.app.LayoutStory
-import com.igenius.androidstories.app.StoryFragment
+import com.igenius.androidstories.app.story.AsyncLayoutStory
+import com.igenius.androidstories.app.story.AsyncStoryFragment
+import com.igenius.androidstories.app.story.LayoutStory
+import com.igenius.androidstories.app.story.StoryFragment
 import com.igenius.androidstories.app.models.AsyncContextVariantProvider
 import com.igenius.androidstories.exampleapp.R
 import kotlinx.coroutines.delay
 
+/**
+ * This is an example of the shortest story:
+ * a LayoutStory variable that defines the title by the variable name
+ * and the content by a layout resource
+ */
 @Story val layout_story_example = LayoutStory(R.layout.button_story)
 
+/**
+ *
+ */
 @Story(
     title = "Button red blu LayoutStory",
     description = "This is a story with different variants, press on the right to select ones",

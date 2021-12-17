@@ -3,7 +3,7 @@ package com.igenius.androidstories.processor
 import com.squareup.kotlinpoet.ClassName
 
 
-private const val MAIN_PACKAGE = "com.igenius.androidstories.app"
+private const val MAIN_PACKAGE = "com.igenius.androidstories.app.story"
 
 val GENERIC_FRAGMENT = ClassName("androidx.fragment.app", "Fragment")
 

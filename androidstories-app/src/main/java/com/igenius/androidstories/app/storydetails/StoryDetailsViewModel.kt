@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app.story
+package com.igenius.androidstories.app.storydetails
 
 import android.app.Application
 import androidx.lifecycle.*

@@ -6,12 +6,12 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import com.igenius.androidstories.app.models.StoriesFolder
 import com.igenius.androidstories.app.models.AndroidStory
-import androidx.core.view.isVisible
 import com.igenius.androidstories.app.databinding.StoriesActivityBinding
-import com.igenius.androidstories.app.story.StoryDetailsConfiguration
-import com.igenius.androidstories.app.story.StoryDetailsFragment
+import com.igenius.androidstories.app.storydetails.StoryDetailsConfiguration
+import com.igenius.androidstories.app.storydetails.StoryDetailsFragment
 import com.igenius.androidstories.app.utils.animate
 import com.igenius.androidstories.app.utils.commitFragment
 import com.igenius.androidstories.app.utils.retrieveFragment

@@ -1,4 +1,4 @@
-package com.igenius.androidstories.app.story
+package com.igenius.androidstories.app.storydetails
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,10 +9,14 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.igenius.androidstories.app.R
+import com.igenius.androidstories.app.StoriesActivity
+import com.igenius.androidstories.app.StoriesApp
 import com.igenius.androidstories.app.databinding.FragmentStoryBinding
 import java.lang.IllegalStateException
-import com.igenius.androidstories.app.*
 import com.igenius.androidstories.app.models.AndroidAsyncFragmentStory
+import com.igenius.androidstories.app.story.AsyncStoryFragment
+import com.igenius.androidstories.app.story.StoryFragment
 import com.igenius.androidstories.app.utils.commitFragment
 import com.igenius.androidstories.app.utils.retrieveFragment
 import java.io.Serializable
