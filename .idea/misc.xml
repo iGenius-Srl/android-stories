@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.3390625" />
         <entry key="../../.gradle/caches/transforms-3/79b2c83ff7e367618c586e86b0d8debd/transformed/appcompat-1.3.1/res/drawable/abc_btn_borderless_material.xml" value="0.3109375" />
         <entry key="../../Library/Android/sdk/platforms/android-31/data/res/layout/simple_list_item_2.xml" value="0.1" />
         <entry key="androidstories-app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.3109375" />
@@ -24,10 +25,11 @@
         <entry key="example-app/src/main/res/layout/activity_main.xml" value="0.5760416666666667" />
         <entry key="example-app/src/main/res/layout/button_secondary_story.xml" value="0.5760416666666667" />
         <entry key="example-app/src/main/res/layout/button_story.xml" value="0.5760416666666667" />
+        <entry key="example-app/src/main/res/layout/simple_story.xml" value="0.17844202898550723" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

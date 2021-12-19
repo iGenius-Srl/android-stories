@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
  *  - {@link com.igenius.androidstories.app.story.LayoutStory}
  *  - {@link com.igenius.androidstories.app.story.AsyncLayoutStory}
  */
+@Target(AnnotationTarget.FIELD, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Story(
 

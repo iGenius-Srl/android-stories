@@ -4,7 +4,6 @@ import android.view.View
 
 /**
  * A data class to define a story based on a layout file.
- *
  */
 data class LayoutStory(
     /**
