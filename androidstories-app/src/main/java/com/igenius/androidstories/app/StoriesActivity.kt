@@ -134,4 +134,10 @@ class StoriesActivity : AppCompatActivity() {
             .takeIf { it != 0 }
             ?.let { getString(it) }
             ?: applicationInfo.nonLocalizedLabel.toString()
+
+    override fun onBackPressed() {
+        if(detailsFragment != null)
+            closeStory()
+        else super.onBackPressed()
+    }
 }
