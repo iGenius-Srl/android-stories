@@ -3,6 +3,7 @@ package com.igenius.androidstories.app
 import android.app.Application
 import androidx.lifecycle.*
 import com.igenius.androidstories.app.favourites.FavouritesManager
+import com.igenius.androidstories.app.favourites.SelectedStoryManager
 import com.igenius.androidstories.app.models.StoriesFolder
 import com.igenius.androidstories.app.models.StoriesProvider
 import com.igenius.androidstories.app.models.StoryNode
@@ -22,17 +23,21 @@ class StoriesActivityViewModel(application: Application) : AndroidViewModel(appl
         }
 
     private val favouritesManager = FavouritesManager(getApplication())
+    private val selectedStoryManager = SelectedStoryManager(getApplication())
+
     private var allStories: List<AndroidStory> = emptyList()
         set(value) {
             field = value
             root = generateFolderTree(value)
-            favouritesManager.cleanWithCurrentStories(value.map { it.id })
+            value.map { it.id }.let {
+                favouritesManager.cleanWithCurrentStories(it)
+                selectedStoryManager.cleanWithCurrentStories(it)
+            }
         }
 
     private val openedFolders: MutableList<StoriesFolder> = mutableListOf()
 
-    private val selectedStoryIdFlow = MutableStateFlow<Int?>(null)
-    val selectedStoryLiveData = selectedStoryIdFlow.asLiveData(viewModelScope.coroutineContext)
+    val selectedStoryLiveData = selectedStoryManager.selectedStoryFLow.asLiveData(viewModelScope.coroutineContext)
 
     private val _showingListFlow = MutableStateFlow<List<StoryNode>>(emptyList())
     val showingListLiveData: LiveData<List<NodeItemModel>> = _showingListFlow
@@ -52,7 +57,7 @@ class StoriesActivityViewModel(application: Application) : AndroidViewModel(appl
                 .toMutableList()
                 .also { it.addAll(items) }
         }
-        .combine(selectedStoryIdFlow) { items, selectedId ->
+        .combine(selectedStoryManager.selectedStoryFLow) { items, selectedId ->
             items.map { item ->
                 val selected = selectedId?.let {
                     (item.node as? AndroidStory)?.id == selectedId
@@ -62,11 +67,7 @@ class StoriesActivityViewModel(application: Application) : AndroidViewModel(appl
         }
         .asLiveData(viewModelScope.coroutineContext)
 
-    fun toggleStory(story: AndroidStory?) {
-        selectedStoryIdFlow.value = story?.id?.takeIf {
-            it != selectedStoryIdFlow.value
-        }
-    }
+    fun toggleStory(story: AndroidStory?) = selectedStoryManager.toggle(story?.id)
 
     private val _fullViewLiveData = MutableLiveData(false)
     val fullViewLiveData: LiveData<Boolean> get() = _fullViewLiveData
