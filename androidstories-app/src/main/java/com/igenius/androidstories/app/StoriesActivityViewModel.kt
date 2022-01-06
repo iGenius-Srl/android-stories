@@ -1,38 +1,71 @@
 package com.igenius.androidstories.app
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
+import com.igenius.androidstories.app.favourites.FavouritesManager
 import com.igenius.androidstories.app.models.StoriesFolder
 import com.igenius.androidstories.app.models.StoriesProvider
 import com.igenius.androidstories.app.models.StoryNode
 import com.igenius.androidstories.app.models.AndroidStory
 import com.igenius.androidstories.app.utils.generateFolderTree
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 
-class StoriesActivityViewModel: ViewModel() {
+class StoriesActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     private var root: StoriesFolder? = null
         set(value) {
             field = value
             openedFolders.clear()
-            showingItems = value?.children?.toMutableList() ?: mutableListOf()
-            updateList()
+            _showingListFlow.value = value?.children ?: emptyList()
+        }
+
+    private val favouritesManager = FavouritesManager(getApplication())
+    private var allStories: List<AndroidStory> = emptyList()
+        set(value) {
+            field = value
+            root = generateFolderTree(value)
+            favouritesManager.cleanWithCurrentStories(value.map { it.id })
         }
 
     private val openedFolders: MutableList<StoriesFolder> = mutableListOf()
-    private var showingItems: MutableList<StoryNode> = mutableListOf()
 
-    private val _showingListLiveData = MutableLiveData<List<NodeItemModel>>()
-    val showingListLiveData: LiveData<List<NodeItemModel>> = _showingListLiveData
+    private val selectedStoryIdFlow = MutableStateFlow<Int?>(null)
+    val selectedStoryLiveData = selectedStoryIdFlow.asLiveData(viewModelScope.coroutineContext)
 
-    private val _selectedStoryLiveData = MutableLiveData<AndroidStory?>(null)
-    val selectedStoryLiveData: LiveData<AndroidStory?> = _selectedStoryLiveData
+    private val _showingListFlow = MutableStateFlow<List<StoryNode>>(emptyList())
+    val showingListLiveData: LiveData<List<NodeItemModel>> = _showingListFlow
+        .map { nodes ->
+            nodes.map {
+                NodeItemModel.node(
+                    node = it,
+                    rootDistance = root?.distance(it) ?: 0,
+                    isOpen = openedFolders.contains(it)
+                )
+            }
+        }
+        .combine(favouritesManager.favouritesFlow) { items, favouritesIds ->
+            favouritesIds
+                .mapNotNull { id -> allStories.find { it.id == id } }
+                .map(NodeItemModel::favourite)
+                .toMutableList()
+                .also { it.addAll(items) }
+        }
+        .combine(selectedStoryIdFlow) { items, selectedId ->
+            items.map { item ->
+                val selected = selectedId?.let {
+                    (item.node as? AndroidStory)?.id == selectedId
+                } ?: false
+                item.copy(selected = selected)
+            }
+        }
+        .asLiveData(viewModelScope.coroutineContext)
 
     fun toggleStory(story: AndroidStory?) {
-        _selectedStoryLiveData.value = story.takeIf {
-            it != _selectedStoryLiveData.value
+        selectedStoryIdFlow.value = story?.id?.takeIf {
+            it != selectedStoryIdFlow.value
         }
-        updateList()
     }
 
     private val _fullViewLiveData = MutableLiveData(false)
@@ -44,11 +77,10 @@ class StoriesActivityViewModel: ViewModel() {
 
     fun fetchRootFolder(provider: StoriesProvider) {
         root?.let { return }
-        val all = provider.stories.sortedBy { it.completePath }
-        root = generateFolderTree(all)
+        allStories = provider.stories.sortedBy { it.completePath }
     }
 
-    fun toggleFolder(folder: StoriesFolder) {
+    fun toggleFolder(folder: StoriesFolder) = _showingListFlow.updateValue { showingItems ->
         val currentIndex = showingItems.indexOf(folder)
         if(currentIndex == -1) return
 
@@ -59,17 +91,11 @@ class StoriesActivityViewModel: ViewModel() {
             openedFolders.removeAll { folder == it || folder.isParent(it) }
             showingItems.removeAll { folder.isParent(it) }
         }
-        updateList()
     }
 
-    private fun updateList() = root?.let { root ->
-        showingItems.map {
-            NodeItemModel(
-                node = it,
-                rootDistance = root.distance(it),
-                isOpen = openedFolders.contains(it),
-                selected = it == selectedStoryLiveData.value
-            )
-        }.let { _showingListLiveData.value = it }
-    }
+    fun toggleFavourite(story: AndroidStory) = favouritesManager.toggle(story.id)
+}
+
+inline fun <T> MutableStateFlow<List<T>>.updateValue(action: (current: MutableList<T>) -> Unit) {
+    value = value.toMutableList().also(action).toList()
 }

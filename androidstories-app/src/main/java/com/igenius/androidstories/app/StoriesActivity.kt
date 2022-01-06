@@ -57,10 +57,12 @@ class StoriesActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        val adapter = StoriesAdapter {
-            when (it) {
-                is AndroidStory -> viewModel.toggleStory(it)
-                is StoriesFolder -> viewModel.toggleFolder(it)
+        val adapter = StoriesAdapter { story, longPress ->
+            when (story) {
+                is AndroidStory -> story.let(
+                    if(longPress) viewModel::toggleFavourite else viewModel::toggleStory
+                )
+                is StoriesFolder -> if(!longPress) viewModel.toggleFolder(story)
             }
         }
         binding.storiesList.adapter = adapter
@@ -72,7 +74,7 @@ class StoriesActivity : AppCompatActivity() {
         viewModel.selectedStoryLiveData.observe(this) {
             detailsFragment = it?.let {
                 StoryDetailsFragment.getInstance(
-                    it.id,
+                    it,
                     StoryDetailsConfiguration(
                         viewModel.fullViewLiveData.value ?: false,
                         canChangeFullView

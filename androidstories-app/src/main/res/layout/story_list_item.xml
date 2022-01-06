@@ -21,21 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iconFolder"
-        android:src="@drawable/ic_baseline_folder_24"
-        app:tint="?colorSecondary"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="@dimen/item_small_margin"
-        android:layout_marginTop="@dimen/item_small_margin"
-        android:layout_marginBottom="@dimen/item_small_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-    <ImageView
-        android:id="@+id/iconStory"
+        android:id="@+id/icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="@dimen/item_small_margin"
@@ -55,24 +41,12 @@
         android:layout_marginStart="@dimen/item_small_margin"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iconFolder"
-        app:layout_constraintTop_toTopOf="@+id/iconFolder"
-        app:layout_constraintBottom_toBottomOf="@+id/iconFolder"
-        tools:text="Story title" />
-
-    <TextView
-        android:id="@+id/selected_title"
-        style="@style/TextAppearance.MaterialComponents.Body1"
-        android:textColor="?colorPrimary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/item_small_margin"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iconFolder"
-        app:layout_constraintTop_toTopOf="@+id/iconFolder"
-        app:layout_constraintBottom_toBottomOf="@+id/iconFolder"
-        tools:text="Selected story title" />
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@+id/icon"
+        app:layout_constraintBottom_toBottomOf="@+id/icon"
+        tools:text="Story title \n cdscds cndskjlcndsakjl dasdsa \n cdskjl"
+        android:lineSpacingExtra="@dimen/item_text_margin"
+        android:layout_marginVertical="@dimen/item_text_margin"/>
 
     <TextView
         android:id="@+id/subtitle"
