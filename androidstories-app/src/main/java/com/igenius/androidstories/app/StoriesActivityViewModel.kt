@@ -2,9 +2,7 @@ package com.igenius.androidstories.app
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.igenius.androidstories.app.favourites.FavouritesManager
-import com.igenius.androidstories.app.favourites.PreferencesManager
-import com.igenius.androidstories.app.favourites.SelectedStoryManager
+import com.igenius.androidstories.app.favourites.*
 import com.igenius.androidstories.app.models.StoriesFolder
 import com.igenius.androidstories.app.models.StoriesProvider
 import com.igenius.androidstories.app.models.StoryNode
@@ -23,8 +21,8 @@ class StoriesActivityViewModel(application: Application) : AndroidViewModel(appl
             _showingListFlow.value = value?.children ?: emptyList()
         }
 
-    private val favouritesManager: FavouritesManager
-    private val selectedStoryManager: SelectedStoryManager
+    private val favouritesManager: IFavouritesManager
+    private val selectedStoryManager: ISelectedStoryManager
 
     init {
         PreferencesManager(::getApplication).let {
