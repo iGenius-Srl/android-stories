@@ -3,6 +3,7 @@ package com.igenius.androidstories.app
 import android.app.Application
 import androidx.lifecycle.*
 import com.igenius.androidstories.app.favourites.FavouritesManager
+import com.igenius.androidstories.app.favourites.PreferencesManager
 import com.igenius.androidstories.app.favourites.SelectedStoryManager
 import com.igenius.androidstories.app.models.StoriesFolder
 import com.igenius.androidstories.app.models.StoriesProvider
@@ -22,8 +23,15 @@ class StoriesActivityViewModel(application: Application) : AndroidViewModel(appl
             _showingListFlow.value = value?.children ?: emptyList()
         }
 
-    private val favouritesManager = FavouritesManager(getApplication())
-    private val selectedStoryManager = SelectedStoryManager(getApplication())
+    private val favouritesManager: FavouritesManager
+    private val selectedStoryManager: SelectedStoryManager
+
+    init {
+        PreferencesManager(::getApplication).let {
+            favouritesManager = FavouritesManager(it)
+            selectedStoryManager = SelectedStoryManager(it)
+        }
+    }
 
     private var allStories: List<AndroidStory> = emptyList()
         set(value) {

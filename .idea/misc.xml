@@ -10,7 +10,9 @@
         <entry key="androidstories-app/src/main/res/drawable/ic_baseline_close_fullscreen_16.xml" value="0.3109375" />
         <entry key="androidstories-app/src/main/res/drawable/ic_baseline_dynamic_feed_16.xml" value="0.5921875" />
         <entry key="androidstories-app/src/main/res/drawable/ic_baseline_dynamic_feed_24.xml" value="0.5921875" />
+        <entry key="androidstories-app/src/main/res/drawable/ic_baseline_folder_open_24.xml" value="0.19166666666666668" />
         <entry key="androidstories-app/src/main/res/drawable/ic_baseline_open_in_full_24.xml" value="0.3109375" />
+        <entry key="androidstories-app/src/main/res/drawable/ic_baseline_star_rate_24.xml" value="0.19166666666666668" />
         <entry key="androidstories-app/src/main/res/drawable/selected_item_background.xml" value="0.5088541666666667" />
         <entry key="androidstories-app/src/main/res/layout-land/fragment_list.xml" value="0.30140454426143387" />
         <entry key="androidstories-app/src/main/res/layout/activity_stories.xml" value="0.3234375" />
@@ -19,7 +21,7 @@
         <entry key="androidstories-app/src/main/res/layout/main_activity_v2.xml" value="0.32848324514991184" />
         <entry key="androidstories-app/src/main/res/layout/stories_activity.xml" value="0.45" />
         <entry key="androidstories-app/src/main/res/layout/stories_activity_v2.xml" value="0.1" />
-        <entry key="androidstories-app/src/main/res/layout/story_list_item.xml" value="0.640973630831643" />
+        <entry key="androidstories-app/src/main/res/layout/story_list_item.xml" value="0.41638795986622074" />
         <entry key="androidstories-app/src/main/res/menu/stories_activity_menu.xml" value="0.49270833333333336" />
         <entry key="androidstories-app/src/main/res/menu/story_details_fragment_menu.xml" value="0.49270833333333336" />
         <entry key="example-app/src/main/res/layout/activity_main.xml" value="0.5760416666666667" />

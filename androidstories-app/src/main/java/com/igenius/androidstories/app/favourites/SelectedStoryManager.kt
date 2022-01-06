@@ -1,16 +1,13 @@
 package com.igenius.androidstories.app.favourites
 
-import android.app.Application
-import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 
 class SelectedStoryManager(
-    val application: Application
+    private val preferencesManager: IPreferencesManager
 ) {
 
-    private val applicationPrefsKey = "${application.packageName}.prefs"
     private val selectedStoryPrefsKey = "prefs.selected"
 
     private val _selectedStoryFlow = MutableStateFlow(readSelectedId())
@@ -24,8 +21,8 @@ class SelectedStoryManager(
         _selectedStoryFlow.value = _selectedStoryFlow.value.takeIf { stories.contains(it) }
     }
 
-    private fun saveSelectedId(id: Int?) = application
-        .getSharedPreferences(applicationPrefsKey, Context.MODE_PRIVATE)
+    private fun saveSelectedId(id: Int?) = preferencesManager
+        .preferences
         .edit()
         .apply {
             id?.let { putInt(selectedStoryPrefsKey, it) }
@@ -33,8 +30,8 @@ class SelectedStoryManager(
         }
         .apply()
 
-    private fun readSelectedId(): Int? = application
-        .getSharedPreferences(applicationPrefsKey, Context.MODE_PRIVATE)
+    private fun readSelectedId(): Int? = preferencesManager
+        .preferences
         .takeIf { it.contains(selectedStoryPrefsKey) }
         ?.getInt(selectedStoryPrefsKey, 0)
 }

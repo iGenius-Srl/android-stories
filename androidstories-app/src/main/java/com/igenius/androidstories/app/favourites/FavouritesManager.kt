@@ -1,17 +1,14 @@
 package com.igenius.androidstories.app.favourites
 
-import android.app.Application
-import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 import java.lang.Integer.parseInt
 
 class FavouritesManager(
-    val application: Application
+    private val preferencesManager: IPreferencesManager
 ) {
 
-    private val applicationPrefsKey = "${application.packageName}.prefs"
     private val favouritesPrefsKey = "prefs.favourites"
 
     private val _favouritesFlow = MutableStateFlow(readIds())
@@ -30,17 +27,17 @@ class FavouritesManager(
         _favouritesFlow.value = action(_favouritesFlow.value.toMutableList())
     }
 
-    private fun saveIds(ids: List<Int>) = application
-        .getSharedPreferences(applicationPrefsKey, Context.MODE_PRIVATE)
+    private fun saveIds(ids: List<Int>) = preferencesManager
+        .preferences
         .edit()
         .putString(favouritesPrefsKey, ids.joinToString(","))
         .apply()
 
-    private fun readIds(): List<Int> = application
-            .getSharedPreferences(applicationPrefsKey, Context.MODE_PRIVATE)
-            .getString(favouritesPrefsKey, null)
-            ?.split(",")
-            ?.filter { it.isNotBlank() }
-            ?.map(::parseInt)
-            ?: emptyList()
+    private fun readIds(): List<Int> = preferencesManager
+        .preferences
+        .getString(favouritesPrefsKey, null)
+        ?.split(",")
+        ?.filter { it.isNotBlank() }
+        ?.map(::parseInt)
+        ?: emptyList()
 }
