@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="night_mode">Night mode</string>
+    <string name="settings">Settings</string>
+    <string name="variants">Variants</string>
+    <string name="full_view">Full view</string>
+    <string name="close_full_view">Close full view</string>
+    <string name="no_story_selected">No story selected</string>
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="item_text_margin">4dp</dimen>
+    <dimen name="item_small_margin">8dp</dimen>
+    <dimen name="item_margin">16dp</dimen>
+    <dimen name="folder_distance">24dp</dimen>
+    <dimen name="story_details_toolbar_size">56dp</dimen>
+    <bool name="isTablet">false</bool>
+</resources>
