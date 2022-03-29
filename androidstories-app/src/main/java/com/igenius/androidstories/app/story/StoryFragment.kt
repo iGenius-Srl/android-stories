@@ -77,6 +77,6 @@ abstract class AsyncStoryFragment<T> : StoryFragment() {
     abstract fun onVariantLoaded(variant: String, data: T)
 
     fun loadVariantData(variant: String, data: Any) {
-        (data asq? T)?.let { onVariantLoaded(variant, it) }
+        (data as? T)?.let { onVariantLoaded(variant, it) }
     }
 }
