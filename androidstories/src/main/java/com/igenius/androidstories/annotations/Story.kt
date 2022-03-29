@@ -5,13 +5,13 @@ import kotlin.reflect.KClass
 /**
  * Annotation to define a story, @Story can be assigned to:
  * Classes that extends
- *  - {@link androidx.fragment.app.Fragment}
- *  - {@link com.igenius.androidstories.app.story.StoryFragment}
- *  - {@link com.igenius.androidstories.app.story.AsyncStoryFragment}
+ *  - [androidx.fragment.app.Fragment]
+ *  - [com.igenius.androidstories.app.story.StoryFragment]
+ *  - [com.igenius.androidstories.app.story.AsyncStoryFragment]
  *
  *  Instances of
- *  - {@link com.igenius.androidstories.app.story.LayoutStory}
- *  - {@link com.igenius.androidstories.app.story.AsyncLayoutStory}
+ *  - [com.igenius.androidstories.app.story.LayoutStory]
+ *  - [com.igenius.androidstories.app.story.AsyncLayoutStory]
  */
 @Target(AnnotationTarget.FIELD, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
@@ -32,13 +32,13 @@ annotation class Story(
      * Array of variants for the given story,
      * One of these values can be selected in the option menu of the story's toolbar,
      * The default selected variant will be the first element.
-     * see {@link com.igenius.androidstories.app.story.StoryFragment#onVariantSelected(variant: String)}
+     * see [com.igenius.androidstories.app.story.StoryFragment.onVariantSelected]
      */
     val variants: Array<String> = ["Default"]
 )
 
 /**
- * Annotation to specify an AsyncDataProvider for the annotated story {@link AsyncVariantProvider}
+ * Annotation to specify an AsyncDataProvider for the annotated story [AsyncVariantProvider]
  */
 @Target(AnnotationTarget.FIELD, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import com.igenius.androidstories.annotations.AsyncVariant
 
 /**
  * A fragment class that allows the usage of variants.
@@ -58,7 +59,7 @@ open class StoryFragment : Fragment() {
 
 /**
  * A fragment class that allows the usage of variants and async data loading for each variant.
- * Any story defined with this class needs to be annotated with {@link com.igenius.androidstories.annotations.AsyncVariant}
+ * Any story defined with this class needs to be annotated with [AsyncVariant]
  * in order to specify a provider class
  */
 abstract class AsyncStoryFragment<T> : StoryFragment() {
@@ -76,6 +77,6 @@ abstract class AsyncStoryFragment<T> : StoryFragment() {
     abstract fun onVariantLoaded(variant: String, data: T)
 
     fun loadVariantData(variant: String, data: Any) {
-        (data as? T)?.let { onVariantLoaded(variant, it) }
+        (data asq? T)?.let { onVariantLoaded(variant, it) }
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import com.igenius.androidstories.annotations.AsyncVariantProvider
 import com.igenius.androidstories.app.story.AsyncStoryFragment
+import com.igenius.androidstories.app.story.StoryFragment
+
 
 /**
  * Interface used by the processor to provide stories to the stories-app
@@ -25,11 +27,12 @@ interface AndroidStory : StoryNode {
 
     /**
      * List of variants, used to create the variants meno of a story,
-     * If the defined story is com.igenius.androidstories.app.StoryFragment,
+     * If the defined story is [StoryFragment],
      * when the user will select one of these, onVariantSelected will be invoked
      */
     val variants: Array<String>
 }
+
 
 /**
  * Defines a story of a Fragment
@@ -55,7 +58,7 @@ interface AndroidAsyncFragmentStory<T> : AndroidFragmentStory {
  * Class that defines a provider of data that receives the current android.content.Context
  * @param <T> Type of the provided data
  * @param cacheLifeTime is the life time specification of fetched data
- * (see {@link com.igenius.androidstories.annotations.AsyncVariantProvider.CacheLifeTime} enum)
+ * (see [AsyncVariantProvider.CacheLifeTime] enum)
  */
 abstract class AsyncContextVariantProvider<T>(
     cacheLifeTime: CacheLifeTime = CacheLifeTime.VIEW_MODEL
