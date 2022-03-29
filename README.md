@@ -2,35 +2,42 @@
 AndroidStories
 ========  
 
-AndroidStories is a development environment for UI components on Android. It allows you to browse a component library, and interactively develop and test components.
+AndroidStories is a development environment for UI components on Android.
+It allows you to browse a component library, and interactively develop and test components.
 
 ## Getting Started
 
 ### Gradle configuration
-To start writing stories we need first to add to the example app gradle file:  
-kapt plugin to generate the stories provider
+To start writing stories we need first to add jitpack in your root build.gradle at the end of repositories:
+```  
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+add to the example app gradle file:
+1) kapt plugin to generate the stories provider
 ```  
 plugins {  
 	 ...
 	 id 'kotlin-kapt'
  }  
-```  
-and the AndroidStories dependencies
+```
+2) AndroidStories dependencies
 ```  
 dependencies {  
 	 ...
-	 // annotations package
-	 implementation "com.igenius.androidstories:core:$lastAndroidStoriesVersion"
-	 // stories app implementation
-	 implementation "com.igenius.androidstories:app:$lastAndroidStoriesVersion"
-	 // stories processor
-	 kapt "com.igenius.androidstories:processor:$lastAndroidStoriesVersion"
+	implementation 'com.github.iGenius-Srl:android-stories:0.0.1'
+    kapt 'com.github.iGenius-Srl:android-stories:0.0.1'
  }  
 ```  
 
-### App Class and StoriesActivity
+### App Class
 To run the stories we need to provide the generated stories to the application,  
-to do that we need to extends the `StoriesApp` class in order to instantiate the generated provider
+to do that you need to make the project and create a custom Application class that extends the `StoriesApp` class in order to instantiate the generated provider.
 
 ```
 class ExampleStoriesApp: StoriesApp() {  
@@ -38,55 +45,164 @@ class ExampleStoriesApp: StoriesApp() {
         get() = AppStoriesProvider()  // generated stories provider
 }
 ```
-declare the application class in the manifest and the StoriesActivity
+declare the application class in the manifest
 ```
 <application  
 	... 
 	android:name="path.to.ExampleStoriesApp"  
 	...>
-	<activity  
-		android:name="com.igenius.androidstories.app.StoriesActivity"  
-		android:exported="true">  
-		<intent-filter>
-			<action android:name="android.intent.action.MAIN" />  
-			<category android:name="android.intent.category.LAUNCHER" />  
-		</intent-filter>
-	</activity>
 </application>
 ```
 done!
 
-## How to use
+# How to use
+To declare a story we have to annotate with `@Story` several classes
 
-To specify a story we have to annotate with `@Story` a function that returns a `View`
-or a `Fragment`.
-Function example
+### LayoutStory
+This is an example of the shortest story:
+a LayoutStory variable that defines the title by the variable name
+and the content by a layout resource
 ```
-@Story() // the function name will be the story's title
-fun example1(  
-    inflater: LayoutInflater,  
-  container: ViewGroup?,  
-): View = // code that create the view
-  
-@Story(  
-    title = "Example 2 title",  
-	description = "Example 2 description"  
-)  
-fun example2(  
-    inflater: LayoutInflater,  
-  container: ViewGroup?,  
-): View = // code that create the view
+@Story val simple_story = LayoutStory(R.layout.simple_story)
 ```
-Fragment story example
+
+Complete usage example of an [LayoutStory]:
+The story defines a title with a path, a description and a list of variants (different version of the same story).
 ```
-@Story(  
-    title = "Example a total fragment"  
-)  
-class ExampleFragment: Fragment() {  
-    override fun onCreateView(  
-        inflater: LayoutInflater,  
-  container: ViewGroup?,  
-  savedInstanceState: Bundle?  
-    ): View = inflater.inflate(R.layout.activity_main, container, false)  
+@Story(
+    title = "Button/Base Button",
+    description = "This is a story with different variants, press on the right to select ones",
+    variants = ["Red", "Blue"]
+)
+val button_story = LayoutStory(R.layout.button_story) { variant ->
+    when (variant) {
+        "Red" -> android.R.color.holo_red_light
+        else -> android.R.color.holo_blue_bright
+    }.let(findViewById<View>(R.id.button)::setBackgroundColorRes)
 }
 ```
+
+### Android Fragment
+A story can be even defined with a simple fragment class
+```
+@Story(
+    title = "Fragment/Native Fragment",
+    description = "Example of a Fragment story, variants cannot be used"
+)
+class NativeFragment: Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.simple_story, container, false)
+}
+```
+
+### StoryFragment
+[StoryFragment] allows you to create custom fragments that are being updated at every story variant change throughout [onVariantSelected].
+```
+@Story(
+    title = "Fragment/Story Fragment",
+    description = "This is a fragment story with different variants, press on the right to select ones",
+    variants = ["Red", "Blue"]
+)
+class ExampleFragment: StoryFragment() {
+    override fun getLayoutRes() = R.layout.button_story
+
+    override fun onVariantSelected(variant: String) {
+        view?.findViewById<Button>(R.id.button)?.setBackgroundColorRes(
+            when (variant) {
+                "Red" -> android.R.color.holo_red_light
+                else -> android.R.color.holo_blue_bright
+            }
+        )
+    }
+}
+```
+
+## AsyncVariant with coroutine
+In some cases is useful to load big mock data to prepare our story such as parsing a big local json.
+Android stories allows you to handle heavy operation thanks to [AsyncVariantProvider].
+
+Here an example about how to use it:
+```
+// Our data class
+data class Test (val foo: String)
+
+// AsyncVariantProvider implementation that provides data from a variant
+class AsyncExampleFragmentProvider: AsyncVariantProvider<Test>() {
+    override suspend fun provide(variant: String): Test {
+        delay(3000)
+        return Test(variant)
+    }
+}
+
+// Async story declaration
+@Story(
+    title = "AsyncLayout/Simple story",
+    variants = ["Red", "Blue"],
+)
+@AsyncVariant(AsyncExampleFragmentProvider::class)
+val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { variant, data ->
+    findViewById<Button>(R.id.button)?.setBackgroundColorRes(
+        when (data.foo) {
+            "Red" -> android.R.color.holo_red_light
+            else -> android.R.color.holo_blue_bright
+        }
+    )
+}
+```
+
+If the loading of data needs a [Context] instance, AndroidStories has the dedicated provider class [AsyncContextVariantProvider],
+that receives the current context instance as first parameter of [AsyncContextVariantProvider.provide].
+
+The classes that supports async providers are:
+
+### AsyncStoryFragment
+[AsyncStoryFragment] is similar to [StoryFragment] but with a data parameter inside the [onVariantLoaded] method
+
+```
+@Story(
+    title = "Fragment/Async Fragment",
+    variants = ["Red", "Blue"],
+)
+@AsyncVariant(AsyncExampleFragmentProvider::class)
+class AsyncExampleFragment: AsyncStoryFragment<Test>() {
+
+    override fun getLayoutRes() = R.layout.button_story
+
+    override fun onVariantLoaded(variant: String, data: Test) {
+        view?.findViewById<Button>(R.id.button)?.setBackgroundColorRes(
+            when (data.foo) {
+                "Red" -> android.R.color.holo_red_light
+                else -> android.R.color.holo_blue_bright
+            }
+        )
+    }
+}
+```
+
+### AsyncLayoutStory
+[AsyncLayoutStory] is similar to [LayoutStory] that receives a data parameter in [onVariantLoaded] action
+
+```
+@Story(
+    title = "AsyncLayout/Simple story",
+    description = "This is a story with different variants, press on the right to select ones",
+    variants = ["Red", "Blue"],
+)
+@AsyncVariant(AsyncExampleFragmentProvider::class)
+val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { variant, data ->
+    findViewById<Button>(R.id.button)?.setBackgroundColorRes(
+        when (data.foo) {
+            "Red" -> android.R.color.holo_red_light
+            else -> android.R.color.holo_blue_bright
+        }
+    )
+}
+```
+
+### UILoader
+By default async stories are shown only when the variant's data is ready and provided to the story showing a default loader during the loading time.
+In some cases is useful to prevent showing the loader but insted the view as it is (in case that our story have to handle also the loading status).
+To do that you should override the property `preventUiLoader` in both [AsyncLayoutStory] and [AsyncStoryFragment]

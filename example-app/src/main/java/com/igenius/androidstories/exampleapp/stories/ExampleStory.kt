@@ -20,12 +20,16 @@ import com.igenius.androidstories.exampleapp.setBackgroundColorRes
 import kotlinx.coroutines.delay
 
 /**
- * This is an example of the shortest story:
+ * This is an example of the shortest story ([LayoutStory]):
  * a LayoutStory variable that defines the title by the variable name
  * and the content by a layout resource
  */
 @Story val simple_story = LayoutStory(R.layout.simple_story)
 
+/**
+ * Complete usage example of an [LayoutStory]:
+ * The story defines a title, a description and a list of variants (different version of the same story).
+ */
 @Story(
     title = "Button/Base Button",
     description = "This is a story with different variants, press on the right to select ones",
@@ -38,6 +42,9 @@ val button_story = LayoutStory(R.layout.button_story) { variant ->
     }.let(findViewById<View>(R.id.button)::setBackgroundColorRes)
 }
 
+/**
+ * A story can be even defined with a simple fragment class
+ */
 @Story(
     title = "Fragment/Native Fragment",
     description = "Example of a Fragment story, variants cannot be used"
@@ -50,6 +57,10 @@ class NativeFragment: Fragment() {
     ): View = inflater.inflate(R.layout.simple_story, container, false)
 }
 
+/**
+ * [StoryFragment] allows you to create custom fragments that are being updated
+ * at every story variant change throughout [onVariantSelected].
+ */
 @Story(
     title = "Fragment/Story Fragment",
     description = "This is a fragment story with different variants, press on the right to select ones",
@@ -95,7 +106,7 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
     variants = ["Red", "Blue"],
 )
 @AsyncVariant(AsyncExampleFragmentProvider::class)
-val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { _, data ->
+val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { variant, data ->
     findViewById<Button>(R.id.button)?.setBackgroundColorRes(
         when (data.foo) {
             "Red" -> android.R.color.holo_red_light
