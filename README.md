@@ -66,7 +66,7 @@ and the content by a layout resource
 @Story val simple_story = LayoutStory(R.layout.simple_story)
 ```
 
-Complete usage example of an [LayoutStory]:
+Complete usage example of an [LayoutStory](androidstories-app/src/main/java/com/igenius/androidstories/app/story/LayoutStory.kt#L8):
 The story defines a title with a path, a description and a list of variants (different version of the same story).
 ```
 @Story(
@@ -99,7 +99,7 @@ class NativeFragment: Fragment() {
 ```
 
 ### StoryFragment
-[StoryFragment] allows you to create custom fragments that are being updated at every story variant change throughout [onVariantSelected].
+[StoryFragment](androidstories-app/src/main/java/com/igenius/androidstories/app/story/StoryFragment.kt#L14) allows you to create custom fragments that are being updated at every story variant change throughout [StoryFragment.onVariantSelected](androidstories-app/src/main/java/com/igenius/androidstories/app/story/StoryFragment.kt#L53).
 ```
 @Story(
     title = "Fragment/Story Fragment",
@@ -122,7 +122,7 @@ class ExampleFragment: StoryFragment() {
 
 ## AsyncVariant with coroutine
 In some cases is useful to load big mock data to prepare our story such as parsing a big local json.
-Android stories allows you to handle heavy operation thanks to [AsyncVariantProvider].
+Android stories allows you to handle heavy operation thanks to [AsyncVariantProvider](androidstories/src/main/java/com/igenius/androidstories/annotations/Story.kt#L57).
 
 Here an example about how to use it:
 ```
@@ -153,13 +153,13 @@ val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { variant
 }
 ```
 
-If the loading of data needs a [Context] instance, AndroidStories has the dedicated provider class [AsyncContextVariantProvider],
-that receives the current context instance as first parameter of [AsyncContextVariantProvider.provide].
+If the loading of data needs a context instance, AndroidStories has the dedicated provider class [AsyncContextVariantProvider](androidstories-app/src/main/java/com/igenius/androidstories/app/models/StoriesProvider.kt#L63),
+that receives the current context instance as first parameter of [AsyncContextVariantProvider.provide](androidstories-app/src/main/java/com/igenius/androidstories/app/models/StoriesProvider.kt#L73).
 
 The classes that supports async providers are:
 
 ### AsyncStoryFragment
-[AsyncStoryFragment] is similar to [StoryFragment] but with a data parameter inside the [onVariantLoaded] method
+[AsyncStoryFragment](androidstories-app/src/main/java/com/igenius/androidstories/app/story/StoryFragment.kt#L65) is similar to [StoryFragment](androidstories-app/src/main/java/com/igenius/androidstories/app/story/StoryFragment.kt#L14) but with a data parameter inside the [onVariantLoaded](androidstories-app/src/main/java/com/igenius/androidstories/app/story/StoryFragment.kt#L77) method
 
 ```
 @Story(
@@ -183,7 +183,7 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
 ```
 
 ### AsyncLayoutStory
-[AsyncLayoutStory] is similar to [LayoutStory] that receives a data parameter in [onVariantLoaded] action
+[AsyncLayoutStory](androidstories-app/src/main/java/com/igenius/androidstories/app/story/LayoutStory.kt#L28) is similar to [LayoutStory](androidstories-app/src/main/java/com/igenius/androidstories/app/story/LayoutStory.kt#L8) that receives a data parameter in [onVariantLoaded](androidstories-app/src/main/java/com/igenius/androidstories/app/story/LayoutStory.kt#L48) action
 
 ```
 @Story(
@@ -205,4 +205,4 @@ val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { variant
 ### UILoader
 By default async stories are shown only when the variant's data is ready and provided to the story showing a default loader during the loading time.
 In some cases is useful to prevent showing the loader but insted the view as it is (in case that our story have to handle also the loading status).
-To do that you should override the property `preventUiLoader` in both [AsyncLayoutStory] and [AsyncStoryFragment]
+To do that you should override the property `preventUiLoader` in both [AsyncLayoutStory](androidstories-app/src/main/java/com/igenius/androidstories/app/story/LayoutStory.kt#L39) and [AsyncStoryFragment](androidstories-app/src/main/java/com/igenius/androidstories/app/story/StoryFragment.kt#L70)
