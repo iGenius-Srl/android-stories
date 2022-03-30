@@ -4,6 +4,26 @@ AndroidStories
 
 AndroidStories is a development environment for UI components on Android.
 It allows you to browse a component library, and interactively develop and test components.
+The usage of AndroidStories is based on the creation of a dedicated app-module where define stories.
+
+[Here an example app](example-app)
+<p align="center">
+	<img src="readme_assets/graph.png" width="50%"/>
+</p>
+
+ - [Getting Started](#getting-started)
+ 	- [Gradle configuration](#gradle-configuration)
+ 	- [App class](#app-class)
+ - [How to use](#how-to-use)
+	- [Stories](#stories)
+		- [LayoutStory](#layoutstory)
+		- [Android Fragment](#android-fragment)
+		- [StoryFragment](#storyfragment)
+	- [Async stories](#async-stories)
+		- [AsyncVariant with coroutine](#asyncvariant-with-coroutine)
+		- [AsyncStoryFragment](#asyncstoryfragment)
+		- [AsyncLayoutStory](#asynclayoutstory)
+		- [UILoader](#uiloader)
 
 ## Getting Started
 
@@ -57,6 +77,8 @@ done!
 
 # How to use
 To declare a story we have to annotate with `@Story` several classes
+
+## Stories
 
 ### LayoutStory
 This is an example of the shortest story:
@@ -119,6 +141,8 @@ class ExampleFragment: StoryFragment() {
     }
 }
 ```
+
+## Async stories
 
 ## AsyncVariant with coroutine
 In some cases is useful to load big mock data to prepare our story such as parsing a big local json.
