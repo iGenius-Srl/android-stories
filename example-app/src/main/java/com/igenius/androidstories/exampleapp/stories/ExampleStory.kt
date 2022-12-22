@@ -106,7 +106,7 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
     variants = ["Red", "Blue"],
 )
 @AsyncVariant(AsyncExampleFragmentProvider::class)
-val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { variant, data ->
+val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { _, data ->
     findViewById<Button>(R.id.button)?.setBackgroundColorRes(
         when (data.foo) {
             "Red" -> android.R.color.holo_red_light

@@ -93,7 +93,7 @@ class StoryDetailsFragment : Fragment() {
             }
 
             inflateMenu(R.menu.story_details_fragment_menu)
-            menu.findItem(R.id.variants_item).subMenu.run {
+            menu.findItem(R.id.variants_item).subMenu?.run {
                 story.variants.forEach { variant ->
                     add(variant).isCheckable = true
                 }
@@ -134,7 +134,7 @@ class StoryDetailsFragment : Fragment() {
     private fun selectVariant(variant: String) {
         binding?.toolbar?.menu?.findItem(R.id.variants_item)?.run {
             title = variant
-            subMenu.forEach {
+            subMenu?.forEach {
                 it.isChecked = it.title == variant
             }
         }
