@@ -45,5 +45,5 @@ data class AsyncLayoutStory<T>(
      *  @param variant The selected variant
      *  @param data The data fetched from the provider
      */
-    val onVariantLoaded: View.(variant: String, data: T) -> Unit = { _, _ -> }
+    val onVariantLoaded: View.(variant: String, data: T?) -> Unit = { _, _ -> }
 )

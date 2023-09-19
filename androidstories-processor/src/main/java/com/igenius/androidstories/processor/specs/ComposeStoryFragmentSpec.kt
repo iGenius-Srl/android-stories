@@ -38,11 +38,11 @@ class ComposeStoryFragmentSpec(
         variantStateFlowSpec.build()
     )
 
-    private val variantFunSpec = annotatedStory.dataType?.let {
+    private val variantFunSpec = annotatedStory.dataType?.let { dataType ->
         FunSpec.builder("onVariantLoaded")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter(ParameterSpec("variant", String::class.asClassName()))
-            .addParameter(ParameterSpec("data", annotatedStory.dataType))
+            .addParameter(ParameterSpec("data",dataType.copy(nullable = true)))
             .addStatement(
                 "variantFlow.value = data",
                 composeStoryElement.simpleName

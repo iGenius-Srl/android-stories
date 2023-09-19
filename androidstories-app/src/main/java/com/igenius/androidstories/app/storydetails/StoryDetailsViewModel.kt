@@ -30,6 +30,8 @@ class StoryDetailsViewModel(application: Application) : AndroidViewModel(applica
         _selectedVariant.value = variant
         provider ?: return
 
+        _fetchedVariantData.value = variant to null
+
         providerJob?.cancel()
         _fetchVariantLoading.value = true
 

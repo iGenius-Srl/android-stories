@@ -118,9 +118,8 @@ class StoryDetailsFragment : Fragment() {
         }
 
         viewModel.fetchedVariantData.observe(viewLifecycleOwner) {
-            it?.let {
-                val data = it.second ?: return@let
-                (storyFragment as? AsyncStoryFragment<*>)?.loadVariantData(it.first, data)
+            it?.let { (variant, data) ->
+                (storyFragment as? AsyncStoryFragment<*>)?.loadVariantData(variant, data)
             }
         }
 

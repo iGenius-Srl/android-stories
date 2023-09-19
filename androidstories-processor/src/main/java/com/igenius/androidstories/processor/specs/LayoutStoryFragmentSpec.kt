@@ -30,11 +30,11 @@ class LayoutStoryFragmentSpec(
         }
     )
 
-    private val variantFunSpec = annotatedStory.dataType?.let {
+    private val variantFunSpec = annotatedStory.dataType?.let { dataType ->
         FunSpec.builder("onVariantLoaded")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter(ParameterSpec("variant", String::class.asClassName()))
-            .addParameter(ParameterSpec("data", annotatedStory.dataType))
+            .addParameter(ParameterSpec("data", dataType.copy(nullable = true)))
             .addStatement(
                 "view?.let { %L.onVariantLoaded.invoke(it, variant, data) }",
                 layoutStoryElement.simpleName

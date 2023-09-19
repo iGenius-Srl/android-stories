@@ -74,9 +74,9 @@ abstract class AsyncStoryFragment<T> : StoryFragment() {
      * @param variant The selected variant
      * @param data The data fetched from the provider
      */
-    abstract fun onVariantLoaded(variant: String, data: T)
+    abstract fun onVariantLoaded(variant: String, data: T?)
 
-    fun loadVariantData(variant: String, data: Any) {
-        (data as? T)?.let { onVariantLoaded(variant, it) }
+    fun loadVariantData(variant: String, data: Any?) {
+        onVariantLoaded(variant, data as? T)
     }
 }

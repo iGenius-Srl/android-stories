@@ -90,9 +90,9 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
 
     override fun getLayoutRes() = R.layout.button_story
 
-    override fun onVariantLoaded(variant: String, data: Test) {
+    override fun onVariantLoaded(variant: String, data: Test?) {
         view?.findViewById<Button>(R.id.button)?.setBackgroundColorRes(
-            when (data.foo) {
+            when (data?.foo) {
                 "Red" -> android.R.color.holo_red_light
                 else -> android.R.color.holo_blue_bright
             }
@@ -108,7 +108,7 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
 @AsyncVariant(AsyncExampleFragmentProvider::class)
 val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { _, data ->
     findViewById<Button>(R.id.button)?.setBackgroundColorRes(
-        when (data.foo) {
+        when (data?.foo) {
             "Red" -> android.R.color.holo_red_light
             else -> android.R.color.holo_blue_bright
         }
@@ -125,12 +125,16 @@ val async_layout_story_without_loader = AsyncLayoutStory<Test>(
     R.layout.button_story,
     preventUiLoader = true
 ) { _, data ->
-    findViewById<Button>(R.id.button)?.setBackgroundColorRes(
-        when (data.foo) {
-            "Red" -> android.R.color.holo_red_light
-            else -> android.R.color.holo_blue_bright
-        }
-    )
+    findViewById<Button>(R.id.button)?.run {
+        setBackgroundColorRes(
+            when (data?.foo) {
+                "Red" -> android.R.color.holo_red_light
+                "Blue" -> android.R.color.holo_blue_bright
+                else -> android.R.color.darker_gray
+            }
+        )
+        isEnabled = data != null
+    }
 }
 
 class AsyncExampleFragmentProvider: AsyncContextVariantProvider<Test>() {
