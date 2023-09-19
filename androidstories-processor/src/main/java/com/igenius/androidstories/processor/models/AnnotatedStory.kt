@@ -27,6 +27,8 @@ data class AnnotatedStory(
         packageName = processingEnv.elementUtils.getPackageOf(element).qualifiedName.toString(),
         simpleName = simpleName ?: element.simpleName.toString(),
         sourceSimpleName = element.simpleName.toString(),
-        dataType = processingEnv.getGenericTypesForParent(element, ASYNC_STORY_FRAGMENT, ASYNC_STORY_LAYOUT).firstOrNull()
+        dataType = processingEnv
+            .getGenericTypesForParent(element, ASYNC_STORY_FRAGMENT, ASYNC_STORY_LAYOUT, ASYNC_STORY_COMPOSE)
+            .firstOrNull()
     )
 }

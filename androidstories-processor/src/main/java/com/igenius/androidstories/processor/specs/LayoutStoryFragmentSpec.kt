@@ -10,7 +10,7 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 
 
-class StoryFragmentSpec(
+class LayoutStoryFragmentSpec(
     layoutStoryElement: Element,
     processingEnv: ProcessingEnvironment
 ) {

@@ -17,21 +17,23 @@ private fun ProcessingEnvironment.checkStoryType(story: Element): Boolean {
 
     val isAsync = story.getAnnotation(AsyncVariant::class.java)?.let { true } ?: false
 
-    val expectedStoryClass = when(story.kind) {
-        ElementKind.CLASS -> if(isAsync) ASYNC_STORY_FRAGMENT else GENERIC_FRAGMENT
-        else -> if(isAsync) ASYNC_STORY_LAYOUT else STORY_LAYOUT
-    }.canonicalName
+    val expectedStoryClasses = when(story.kind) {
+        ElementKind.CLASS -> listOf(if(isAsync) ASYNC_STORY_FRAGMENT else GENERIC_FRAGMENT)
+        else -> if(isAsync)
+            listOf(ASYNC_STORY_LAYOUT, ASYNC_STORY_COMPOSE)
+        else listOf(STORY_COMPOSE, STORY_LAYOUT)
+    }.map { it.canonicalName }
 
     typeUtils
         .getSupertypes(story.asType())
         .map { it.asTypeName() }
         .map { if (it is ParameterizedTypeName) it.rawType.canonicalName else it.toString() }
-        .find { expectedStoryClass == it }
+        .find { expectedStoryClasses.contains(it) }
         ?.let { return@checkStoryType true }
 
     messager.printMessage(
         Diagnostic.Kind.ERROR,
-        "${story.simpleName} should extend $expectedStoryClass",
+        "${story.simpleName} should extend one of: [${expectedStoryClasses.joinToString(", ")}]",
         story
     )
 
@@ -50,7 +52,7 @@ private fun ProcessingEnvironment.checkDataType(story: Element): Boolean {
         ASYNC_CONTEXT_VARIANT_PROVIDER
     ).firstOrNull()
 
-    val storyDataType = getGenericTypesForParent(story, ASYNC_STORY_FRAGMENT, ASYNC_STORY_LAYOUT)
+    val storyDataType = getGenericTypesForParent(story, ASYNC_STORY_FRAGMENT, ASYNC_STORY_LAYOUT, ASYNC_STORY_COMPOSE)
         .firstOrNull()
 
     if (storyDataType == providerDataType) return true

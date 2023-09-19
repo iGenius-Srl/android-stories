@@ -15,6 +15,10 @@ val STORY_LAYOUT = ClassName(MAIN_PACKAGE, "LayoutStory")
 
 val ASYNC_STORY_LAYOUT = ClassName(MAIN_PACKAGE, "AsyncLayoutStory")
 
+val STORY_COMPOSE = ClassName(MAIN_PACKAGE, "ComposeStory")
+
+val ASYNC_STORY_COMPOSE = ClassName(MAIN_PACKAGE, "AsyncComposeStory")
+
 private const val MODELS_PACKAGE = "com.igenius.androidstories.app.models"
 
 val STORIES_PROVIDER_INTERFACE = ClassName(MODELS_PACKAGE, "StoriesProvider")

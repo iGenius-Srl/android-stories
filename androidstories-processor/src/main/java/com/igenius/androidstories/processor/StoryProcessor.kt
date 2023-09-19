@@ -11,6 +11,7 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
+import javax.tools.Diagnostic
 
 @SupportedAnnotationTypes("com.igenius.androidstories.annotations.Story")
 @SupportedOptions(StoryProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
@@ -30,7 +31,7 @@ class StoryProcessor : AbstractProcessor() {
         val generatedElement = elements?.mapNotNull {
             when (it.kind) {
                 ElementKind.CLASS -> AnnotatedStory(processingEnv, it)
-                ElementKind.FIELD -> createFragmentFromLayoutStory(it, generatedSourcesRoot)
+                ElementKind.FIELD -> createFragmentFromStory(it, generatedSourcesRoot)
                 else -> null
             }
         }
@@ -42,11 +43,21 @@ class StoryProcessor : AbstractProcessor() {
         return false
     }
 
-    private fun createFragmentFromLayoutStory(element: Element, sourceRoot: File) =
-        StoryFragmentSpec(element, processingEnv).let {
-            it.writeTo(sourceRoot)
-            it.annotatedStory
-        }
+    private fun createFragmentFromStory(element: Element, sourceRoot: File): AnnotatedStory? {
+        val isCompose = processingEnv.extends(element.asType(), STORY_COMPOSE, ASYNC_STORY_COMPOSE)
+        val isLayout = processingEnv.extends(element.asType(), STORY_LAYOUT, ASYNC_STORY_LAYOUT)
+        return if(isCompose)
+            ComposeStoryFragmentSpec(element, processingEnv).let {
+                it.writeTo(sourceRoot)
+                it.annotatedStory
+            }
+        else if(isLayout)
+            LayoutStoryFragmentSpec(element, processingEnv).let {
+                it.writeTo(sourceRoot)
+                it.annotatedStory
+            }
+        else null
+    }
 
     private fun generateProvider(
         generatedSourcesRoot: File,

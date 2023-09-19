@@ -47,3 +47,11 @@ fun ProcessingEnvironment.getGenericTypesForParent(element: Element, vararg pare
             ClassName.bestGuess(type)
         }
         .toList()
+
+fun ProcessingEnvironment.extends(type: TypeMirror, vararg parents: ClassName): Boolean =
+    typeUtils.getSupertypes(type).map { it.asTypeName().toString() }.let {
+        parents.forEach { parent ->
+            if(it.contains(parent.toString())) return@let true
+        }
+        false
+    }
