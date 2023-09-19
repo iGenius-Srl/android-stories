@@ -228,5 +228,5 @@ val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { variant
 
 ### UILoader
 By default async stories are shown only when the variant's data is ready and provided to the story showing a default loader during the loading time.
-In some cases is useful to prevent showing the loader but insted the view as it is (in case that our story have to handle also the loading status).
+In some cases is useful to prevent showing the loader but instead the view as it is (in case that our story have to handle also the loading status).
 To do that you should override the property `preventUiLoader` in both [AsyncLayoutStory](androidstories-app/src/main/java/com/igenius/androidstories/app/story/LayoutStory.kt#L39) and [AsyncStoryFragment](androidstories-app/src/main/java/com/igenius/androidstories/app/story/StoryFragment.kt#L70)
