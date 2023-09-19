@@ -43,7 +43,7 @@ data class AsyncLayoutStory<T>(
      *  see [AsyncStoryFragment.onVariantLoaded]
      *  @param this The inflated view
      *  @param variant The selected variant
-     *  @param data The data fetched from the provider
+     *  @param data The data fetched from the provider, null during the loading state
      */
     val onVariantLoaded: View.(variant: String, data: T?) -> Unit = { _, _ -> }
 )

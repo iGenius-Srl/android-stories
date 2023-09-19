@@ -72,7 +72,7 @@ abstract class AsyncStoryFragment<T> : StoryFragment() {
     /**
      * Executed when the provider resolve a data for a given variant
      * @param variant The selected variant
-     * @param data The data fetched from the provider
+     * @param data The data fetched from the provider, null during the loading state
      */
     abstract fun onVariantLoaded(variant: String, data: T?)
 

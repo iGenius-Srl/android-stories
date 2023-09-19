@@ -75,11 +75,13 @@ class ExampleFragment: StoryFragment() {
         )
     }
 }
-
+/**
+ * [ComposeStory] allows you to create a composable story which receives the current variant as parameter.
+ */
 @Story(
     "Compose/Simple",
     variants = ["Variant 1", "Variant 2"]
 )
-val compose_story = ComposeStory {
-    Text(it)
+val compose_story = ComposeStory { variant ->
+    Text(variant)
 }

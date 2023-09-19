@@ -13,7 +13,12 @@ import com.igenius.androidstories.exampleapp.R
 import com.igenius.androidstories.exampleapp.setBackgroundColorRes
 import kotlinx.coroutines.delay
 
-
+/**
+ * This is an example of a simple story with an asynchronous data retrieve.
+ * an AsyncStoryFragment class which defines the button style by the variant name and the content by a layout resource.
+ * Is important to declare an [AsyncVariant] annotation to specify the provider that will resolve the variant string to a domain model
+ * (in this example we are using [AsyncExampleFragmentProvider]).
+ */
 @Story(
     title = "Fragment/Async Fragment",
     description = "This is a story with different variants, press on the right to select ones",
@@ -34,6 +39,13 @@ class AsyncExampleFragment: AsyncStoryFragment<Test>() {
     }
 }
 
+/**
+ * This is an example of a simple story with an asynchronous data retrieve
+ * an AsyncLayoutStory object that defines the button style by the variable name
+ * and the content by a layout resource.
+ * Is important to declare an [AsyncVariant] annotation to specify the provider that will resolve the variant to a domain model
+ * (in this example is [AsyncExampleFragmentProvider]).
+ */
 @Story(
     title = "AsyncLayout/Simple story",
     description = "This is a story with different variants, press on the right to select ones",
@@ -49,6 +61,14 @@ val async_layout_story = AsyncLayoutStory<Test>(R.layout.button_story) { _, data
     )
 }
 
+/**
+ * This is an example of a simple story with an asynchronous data retrieve
+ * an AsyncLayoutStory object that defines the button style by the variable name
+ * and the content by a layout resource.
+ * In this example there is [AsyncLayoutStory.preventUiLoader] as true, this allows to see the story content when the provided data is still loading (data is null).
+ * Is important to declare an [AsyncVariant] annotation to specify the provider that will resolve the variant to a domain model
+ * (in this example is [AsyncExampleFragmentProvider]).
+ */
 @Story(
     title = "AsyncLayout/Simple story without loader",
     description = "This is a story without a loader",
@@ -70,7 +90,14 @@ val async_layout_story_without_loader = AsyncLayoutStory<Test>(
         isEnabled = data != null
     }
 }
-
+/**
+ * This is an example of a simple story with an asynchronous data retrieve in a compose view
+ * an AsyncLayoutStory object that defines the button style by the variable name
+ * and the content by a layout resource.
+ * In this example there is [AsyncComposeStory.preventUiLoader] as true, this allows to see the story content when the provided data is still loading (data is null).
+ * Is important to declare an [AsyncVariant] annotation to specify the provider that will resolve the variant to a domain model
+ * (in this example is [AsyncExampleFragmentProvider]).
+ */
 @Story(
     "Compose/Async",
     variants = ["Variant 1", "Variant 2"]
