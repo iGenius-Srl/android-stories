@@ -48,10 +48,9 @@ fun ProcessingEnvironment.getGenericTypesForParent(element: Element, vararg pare
         }
         .toList()
 
-fun ProcessingEnvironment.extends(type: TypeMirror, vararg parents: ClassName): Boolean =
-    typeUtils.getSupertypes(type).map { it.asTypeName().toString() }.let {
-        parents.forEach { parent ->
-            if(it.contains(parent.toString())) return@let true
-        }
-        false
-    }
+fun ProcessingEnvironment.extends(type: TypeMirror, parent: ClassName): Boolean =
+    typeUtils.getSupertypes(type)
+        .map { it.asTypeName() }
+        .find {
+            it == parent || it.toString().startsWith("$parent<")
+        } != null

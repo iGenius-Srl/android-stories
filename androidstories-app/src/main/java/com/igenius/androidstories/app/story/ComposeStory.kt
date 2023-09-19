@@ -8,5 +8,5 @@ class ComposeStory(
 
 class AsyncComposeStory<T>(
     val preventUiLoader: Boolean = false,
-    val content: @Composable (variant: T) -> Unit,
+    val content: @Composable (variant: T?) -> Unit,
 )

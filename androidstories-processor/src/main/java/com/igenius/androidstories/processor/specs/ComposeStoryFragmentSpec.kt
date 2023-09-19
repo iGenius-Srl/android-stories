@@ -8,7 +8,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import java.io.File
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
-import kotlin.reflect.KVisibility
 
 
 class ComposeStoryFragmentSpec(
@@ -24,7 +23,9 @@ class ComposeStoryFragmentSpec(
     } ?: STORY_FRAGMENT
 
     private val variantStateFlowSpec = PropertySpec
-        .builder("variantFlow", MUTABLE_STATE_FLOW.parameterizedBy(String::class.asTypeName().copy(nullable = true)))
+        .builder("variantFlow", MUTABLE_STATE_FLOW.parameterizedBy(
+            (annotatedStory.dataType ?: String::class.asTypeName()).copy(nullable = true)
+        ))
         .addModifiers(KModifier.PRIVATE)
         .initializer("${MUTABLE_STATE_FLOW.simpleName}(null)")
 
@@ -43,7 +44,7 @@ class ComposeStoryFragmentSpec(
             .addParameter(ParameterSpec("variant", String::class.asClassName()))
             .addParameter(ParameterSpec("data", annotatedStory.dataType))
             .addStatement(
-                "view?.let { %L.onVariantLoaded.invoke(it, variant, data) }",
+                "variantFlow.value = data",
                 composeStoryElement.simpleName
             )
     } ?: FunSpec.builder("onVariantSelected")
@@ -69,8 +70,10 @@ class ComposeStoryFragmentSpec(
                     """
                         return ${COMPOSE_VIEW_TYPE.canonicalName}(requireContext()).apply { setContent {
                             val variant by variantFlow.$COLLECT_STATE_AS_LIFECYCLE_NAME()
-                            variant?.let {
-                                %L.content(it)
+                            ${
+                                annotatedStory.dataType
+                                    ?.let { "%L.content(variant)" }
+                                    ?: "variant?.let { %L.content(it) }"
                             }
                         } }
                     """.trimIndent(),

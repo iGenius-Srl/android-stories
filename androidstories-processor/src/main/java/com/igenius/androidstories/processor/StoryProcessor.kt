@@ -44,8 +44,10 @@ class StoryProcessor : AbstractProcessor() {
     }
 
     private fun createFragmentFromStory(element: Element, sourceRoot: File): AnnotatedStory? {
-        val isCompose = processingEnv.extends(element.asType(), STORY_COMPOSE, ASYNC_STORY_COMPOSE)
-        val isLayout = processingEnv.extends(element.asType(), STORY_LAYOUT, ASYNC_STORY_LAYOUT)
+
+        val isCompose = processingEnv.extends(element.asType(), STORY_COMPOSE) || processingEnv.extends(element.asType(), ASYNC_STORY_COMPOSE)
+        val isLayout = processingEnv.extends(element.asType(), STORY_LAYOUT) || processingEnv.extends(element.asType(), ASYNC_STORY_LAYOUT)
+        processingEnv.messager.printMessage(Diagnostic.Kind.NOTE, "ZOID ${element.asType()} isLay: $isLayout isCompo: $isCompose")
         return if(isCompose)
             ComposeStoryFragmentSpec(element, processingEnv).let {
                 it.writeTo(sourceRoot)
