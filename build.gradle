@@ -24,7 +24,7 @@ task clean(type: Delete) {
 def githubProperties = new Properties()
 githubProperties.load(new FileInputStream(rootProject.file("github.properties"))) //Set env variable GPR_USER & GPR_API_KEY if not adding a properties file
 
-def libraryVersion = '0.3_compose_6'
+def libraryVersion = '0.3_compose_7'
 def githubGroupId = 'com.igenius'
 
 def androidStoriesId = 'androidstories'

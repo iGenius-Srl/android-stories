@@ -15,7 +15,7 @@ import javax.tools.Diagnostic
 
 @SupportedAnnotationTypes("com.igenius.androidstories.annotations.Story")
 @SupportedOptions(StoryProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor::class)
 class StoryProcessor : AbstractProcessor() {
 
