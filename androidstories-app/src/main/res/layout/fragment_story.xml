@@ -13,8 +13,7 @@
         android:layout_height="wrap_content"
         android:background="?colorPrimary"
         app:elevation="4dp"
-        app:navigationIcon="@drawable/ic_baseline_close_24"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight" />
+        app:navigationIcon="@drawable/ic_baseline_close_24" />
 
     <FrameLayout
         android:layout_width="match_parent"
