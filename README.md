@@ -30,30 +30,32 @@ The usage of AndroidStories is based on the creation of a dedicated app-module w
 ## Getting Started
 
 ### Gradle configuration
-To start writing stories we need first to add jitpack in your root build.gradle at the end of repositories:
-```
-allprojects {
+To start writing stories we need first to add jitpack in your root settings.gradle at the end of repositories:
+```groovy
     repositories {
-        ...
-        maven { url 'https://jitpack.io' }
+	// ...
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/iGenius-Srl/android-stories")
+		}
     }
-}
 ```
 
 add to the example app gradle file:
 1) kapt plugin to generate the stories provider
-```
+```groovy
 plugins {  
-	 ...
+	 // ...
 	 id 'kotlin-kapt'
  }  
 ```
 2) AndroidStories dependencies
-```kotlin
+```groovy
 dependencies {  
-	 ...
-	implementation 'com.github.iGenius-Srl:android-stories:0.0.1'
-    kapt 'com.github.iGenius-Srl:android-stories:0.0.1'
+	// ...
+    implementation 'com.igenius:android-stories:0.0.1'
+    kapt 'com.igenius:android-stories:0.0.1'
+	implementation 'com.igenius:android-stories-app:0.0.1'
  }  
 ```  
 

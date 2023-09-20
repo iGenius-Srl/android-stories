@@ -3,7 +3,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/iGenius-Srl/android-stories")
+        }
     }
 }
 rootProject.name = "AndroidStoriesApp"

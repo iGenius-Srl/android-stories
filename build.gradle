@@ -13,6 +13,54 @@ buildscript {
     }
 }
 
+plugins {
+    id 'maven-publish'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(rootProject.file("github.properties"))) //Set env variable GPR_USER & GPR_API_KEY if not adding a properties file
+
+def libraryVersion = '0.3_compose'
+def githubGroupId = 'com.igenius'
+
+def androidStoriesId = 'androidstories'
+def androidStoriesAppId = "$androidStoriesId-app"
+def androidStoriesProcessorId = "$androidStoriesId-processor"
+
+publishing {
+    publications {
+        androidstories(MavenPublication) {
+            groupId githubGroupId
+            artifactId androidStoriesId
+            version libraryVersion
+            artifact("./$androidStoriesId/build/libs/${androidStoriesId}.jar")
+        }
+        androidstoriesApp(MavenPublication) {
+            groupId githubGroupId
+            artifactId androidStoriesAppId
+            version libraryVersion
+            artifact("./$androidStoriesAppId/build/outputs/aar/$androidStoriesAppId-release.aar")
+        }
+        androidstoriesProcessor(MavenPublication) {
+            groupId githubGroupId
+            artifactId androidStoriesProcessorId
+            version libraryVersion
+            artifact("./$androidStoriesProcessorId/build/libs/${androidStoriesProcessorId}.jar")
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/iGenius-Srl/android-stories")
+            credentials {
+                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+            }
+        }
+    }
 }
