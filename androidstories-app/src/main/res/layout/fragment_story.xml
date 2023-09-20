@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?colorPrimary"
-        android:theme="@style/Theme.AndroidStoriesApp.Toolbar"
         app:elevation="4dp"
         app:navigationIcon="@drawable/ic_baseline_close_24"
         app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight" />
